@@ -1,6 +1,7 @@
 package com.meritamerica.main.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +42,6 @@ public class MeritBankController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder newAccountHolder) {
-//		MeritBank.addAccountHolder(newAccountHolder);
 		accHolderRepo.save(newAccountHolder);
 		return newAccountHolder;
 	}
@@ -53,14 +54,13 @@ public class MeritBankController {
 	@GetMapping(value="/AccountHolders/{id}") 
 	public AccountHolder getAccountHolder(@PathVariable("id") long id) throws NotFoundException
 	{
-		AccountHolder account = MeritBank.getAccountHolder(id);
-
-		if (account == null) {
-			logger.error("No account exists");
+		try {
+			Optional<AccountHolder> account = accHolderRepo.findById(id);
+			
+			return account.get();
+		} catch(Exception e) {
 			throw new NotFoundException("No account exists");
 		}
-	
-		return account;
 	}
 	
 	@PostMapping(value="/AccountHolders/{id}/CheckingAccounts")
