@@ -1,12 +1,16 @@
 package com.meritamerica.main.controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import com.meritamerica.main.exceptions.*;
 import com.meritamerica.main.models.*;
+import com.meritamerica.main.repositories.AccountHolderRepo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,23 +26,28 @@ public class MeritBankController {
 	
 	Logger logger = LoggerFactory.getLogger(MeritBankController.class);
 	
+	@Autowired
+	AccountHolderRepo accHolderRepo;
+	
 	@RequestMapping("/")
 	@ResponseBody
 	public String home() {
 		return "Hi";
 	}
 	
+	
 	@PostMapping(value = "/AccountHolders") 
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder newAccountHolder) {
-		MeritBank.addAccountHolder(newAccountHolder);
+//		MeritBank.addAccountHolder(newAccountHolder);
+		accHolderRepo.save(newAccountHolder);
 		return newAccountHolder;
 	}
 	
 	@GetMapping(value="/AccountHolders")
-	public AccountHolder[] getAccountHolders() {
-		return MeritBank.getAccountHolders();
+	public List<AccountHolder> getAccountHolders() {
+		return accHolderRepo.findAll();
 	}
 	
 	@GetMapping(value="/AccountHolders/{id}") 

@@ -3,14 +3,19 @@ package com.meritamerica.main.models;
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-// Declare a class that implements an interface 
+@Entity
+@Table(name="account_holder")
 public class AccountHolder implements Comparable{ 
 		private static long ID = 1;
 		
+		@Id
 		private long id;
 	    // Class member variables 
 		@NotNull(message="First name can not be Null")
