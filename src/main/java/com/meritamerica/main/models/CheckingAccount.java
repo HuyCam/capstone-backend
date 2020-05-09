@@ -1,17 +1,21 @@
 package com.meritamerica.main.models;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 	// CheckingAccount(child class) inherit methods and variables from BankAccount(parent class)
 @Entity
 @Table(name="checking_account")
 public class CheckingAccount extends BankAccount {
 	private static double INTEREST_RATE = 0.0001;
+	@NotNull
+	@Column(name="acc_holder_id")
+	private long accountHolderId;
+	
 	public CheckingAccount(double balance, double interestRate) {
 		super(balance, interestRate);
 	}
@@ -27,5 +31,13 @@ public class CheckingAccount extends BankAccount {
 	// 0.001 is the default interest rate
 	public CheckingAccount(double balance) {
 		super(balance, INTEREST_RATE);
+	}
+
+	public long getAccountHolderId() {
+		return accountHolderId;
+	}
+
+	public void setAccountHolderId(long accountHolderId) {
+		this.accountHolderId = accountHolderId;
 	}
 }

@@ -11,7 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -39,7 +41,14 @@ public class AccountHolder implements Comparable{
 	    @NotNull
 	    @Size(min=9, message="SNN can not be less than 9 characters")
 	    private String ssn;
+	    
+	    
+	    @OneToMany
+	    @JoinColumn(name="acc_holder_id", referencedColumnName = "id")
+	    @OrderColumn
 	    private CheckingAccount[] checkingAccounts;
+	    
+	    
 	    private SavingsAccount[] savingsAccounts;
 	    private CDAccount[] CDAccounts;
 	    
@@ -51,18 +60,7 @@ public class AccountHolder implements Comparable{
 	    private int numberOfCheckings = 0;
 	    private int numberOfSavings = 0;
 	    private int numberOfCDAs = 0;
-	    
 
-	    // Used split method to split a string into an array 
-	    public static AccountHolder readFromString(String accountHolderData) {
-	    	String[] data = accountHolderData.split(",");
-	    	String firstName = data[0];
-	    	String middleName = data[1];
-	    	String lastName = data[2];
-	    	String ssn = data[3];
-	    	
-	    	return new AccountHolder(firstName, middleName, lastName, ssn);
-	    }
 	    
 	    public AccountHolder (){	
 	    	// instantiate array of Checkings
