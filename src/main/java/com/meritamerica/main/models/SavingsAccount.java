@@ -5,11 +5,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-// SavingsAccount(child class) inherit methods and variables from BankAccount(parent class)
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+// SavingsAccount(child class) inherit methods and variables from BankAccount(parent class)
+@Entity
+@JsonIgnoreProperties(value = { "accHolder" })
 public class SavingsAccount extends BankAccount {
+	
+	@ManyToOne
+	@JoinColumn(name="id")
+	private AccountHolder accHolder;
+	
 	private static double INTEREST_RATE = 0.01;
 	SavingsAccount(double balance, double interestRate){
 		super(balance, interestRate);    
@@ -26,5 +36,13 @@ public class SavingsAccount extends BankAccount {
 	
 	public SavingsAccount() {
 		super(0, INTEREST_RATE);
+	}
+
+	public AccountHolder getAccHolder() {
+		return accHolder;
+	}
+
+	public void setAccHolder(AccountHolder accHolder) {
+		this.accHolder = accHolder;
 	}
 }

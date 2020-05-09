@@ -9,6 +9,7 @@ import com.meritamerica.main.exceptions.*;
 import com.meritamerica.main.models.*;
 import com.meritamerica.main.repositories.AccountHolderRepo;
 import com.meritamerica.main.repositories.CheckingAccountRepo;
+import com.meritamerica.main.repositories.SavingAccountRepo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,9 @@ public class AccountHolderController {
 	
 	@Autowired
 	CheckingAccountRepo checkingRepo;
+	
+	@Autowired
+	SavingAccountRepo savingRepo;
 	
 	@PostMapping(value = "/") 
 	@ResponseStatus(HttpStatus.CREATED)
@@ -79,7 +83,7 @@ public class AccountHolderController {
 //		accHolderRepo.save(account);
 		
 		checking.setAccHolder(account);
-		checkingRepo.save(checking);
+		checking = checkingRepo.save(checking);
 		
 		return checking;
 	}
@@ -93,29 +97,29 @@ public class AccountHolderController {
 		} else {
 			throw new NotFoundException("Checking Account is Not Found ");
 		}
-		
-		
 	}
-//	
-//	@PostMapping(value="/{id}/SavingsAccounts")
-//	@ResponseStatus(HttpStatus.CREATED)
-//	public SavingsAccount addSaving(@PathVariable("id") long id, @RequestBody @Valid SavingsAccount savings ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
-//	NegativeAmountException
-//	{
-//				
-//		AccountHolder account = this.getAccountHolder(id);		
-//		
-//		account.addSavingsAccount(savings);
-//		
-//		return savings;
-//	}
-//	
-//	@GetMapping(value="/{id}/SavingsAccounts")
-//	public SavingsAccount[] getSavings(@PathVariable("id") long id) throws NotFoundException {
-//		AccountHolder account = this.getAccountHolder(id);
-//		
-//		return account.getSavingsAccounts();
-//	}
+	
+	@PostMapping(value="/{id}/SavingsAccounts")
+	@ResponseStatus(HttpStatus.CREATED)
+	public SavingsAccount addSaving(@PathVariable("id") long id, @RequestBody @Valid SavingsAccount savings ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
+	NegativeAmountException
+	{	
+		AccountHolder account = this.getAccountHolder(id);
+		savings.setAccHolder(account);
+		savings = savingRepo.save(savings);
+		return savings;
+	}
+	
+	@GetMapping(value="/{id}/SavingsAccounts")
+	public List<SavingsAccount> getSavings(@PathVariable("id") long id) throws NotFoundException {
+		Optional<AccountHolder> account = accHolderRepo.findById(id);
+		
+		if (account.isPresent()) {
+			return account.get().getSavingsAccounts();
+		} else {
+			throw new NotFoundException("Checking Account is Not Found ");
+		}
+	}
 //	
 //	@PostMapping(value="/{id}/CDAccounts")
 //	@ResponseStatus(HttpStatus.CREATED)
