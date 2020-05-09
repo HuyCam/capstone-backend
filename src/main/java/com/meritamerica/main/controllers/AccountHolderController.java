@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.meritamerica.main.exceptions.*;
 import com.meritamerica.main.models.*;
+import com.meritamerica.main.repositories.AccHolderContactRepo;
 import com.meritamerica.main.repositories.AccountHolderRepo;
 
 import org.slf4j.Logger;
@@ -23,13 +24,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequestMapping(value="/AccountHolders")
 @RestController
-public class MeritBankController {
+public class AccountHolderController {
 	
-	Logger logger = LoggerFactory.getLogger(MeritBankController.class);
+	Logger logger = LoggerFactory.getLogger(AccountHolderController.class);
 	
 	@Autowired
 	AccountHolderRepo accHolderRepo;
+
 	
 	@RequestMapping("/")
 	@ResponseBody
@@ -38,7 +41,7 @@ public class MeritBankController {
 	}
 	
 	
-	@PostMapping(value = "/AccountHolders") 
+	@PostMapping(value = "/") 
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder newAccountHolder) {
@@ -46,12 +49,12 @@ public class MeritBankController {
 		return newAccountHolder;
 	}
 	
-	@GetMapping(value="/AccountHolders")
+	@GetMapping(value="/")
 	public List<AccountHolder> getAccountHolders() {
 		return accHolderRepo.findAll();
 	}
 	
-	@GetMapping(value="/AccountHolders/{id}") 
+	@GetMapping(value="/{id}") 
 	public AccountHolder getAccountHolder(@PathVariable("id") long id) throws NotFoundException
 	{
 		try {
@@ -63,7 +66,8 @@ public class MeritBankController {
 		}
 	}
 	
-	@PostMapping(value="/AccountHolders/{id}/CheckingAccounts")
+	
+	@PostMapping(value="/{id}/CheckingAccounts")
 	@ResponseStatus(HttpStatus.CREATED)
 	public CheckingAccount addChecking(@PathVariable("id") long id, @RequestBody @Valid CheckingAccount checking ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
 	NegativeAmountException
@@ -75,14 +79,14 @@ public class MeritBankController {
 		return checking;
 	}
 	
-	@GetMapping(value="/AccountHolders/{id}/CheckingAccounts")
+	@GetMapping(value="/{id}/CheckingAccounts")
 	public CheckingAccount[] getChecking(@PathVariable("id") long id) throws NotFoundException {
 		AccountHolder account = this.getAccountHolder(id);
 		
 		return account.getCheckingAccounts();
 	}
 	
-	@PostMapping(value="/AccountHolders/{id}/SavingsAccounts")
+	@PostMapping(value="/{id}/SavingsAccounts")
 	@ResponseStatus(HttpStatus.CREATED)
 	public SavingsAccount addSaving(@PathVariable("id") long id, @RequestBody @Valid SavingsAccount savings ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
 	NegativeAmountException
@@ -95,14 +99,14 @@ public class MeritBankController {
 		return savings;
 	}
 	
-	@GetMapping(value="/AccountHolders/{id}/SavingsAccounts")
+	@GetMapping(value="/{id}/SavingsAccounts")
 	public SavingsAccount[] getSavings(@PathVariable("id") long id) throws NotFoundException {
 		AccountHolder account = this.getAccountHolder(id);
 		
 		return account.getSavingsAccounts();
 	}
 	
-	@PostMapping(value="/AccountHolders/{id}/CDAccounts")
+	@PostMapping(value="/{id}/CDAccounts")
 	@ResponseStatus(HttpStatus.CREATED)
 	public CDAccount addCDAccount(@PathVariable("id") long id, @RequestBody @Valid CDAccount CDAccount ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
 	NegativeAmountException, ExceedsFraudSuspicionLimitException, FieldErrorException
@@ -114,7 +118,7 @@ public class MeritBankController {
 		return CDAccount;
 	}
 	
-	@GetMapping(value="/AccountHolders/{id}/CDAccounts")
+	@GetMapping(value="/{id}/CDAccounts")
 	public CDAccount[] getCDAccounts(@PathVariable("id") long id) throws NotFoundException {
 		AccountHolder account = this.getAccountHolder(id);
 		
