@@ -3,19 +3,26 @@ package com.meritamerica.main.models;
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="account_holder")
+@Table(name="accountholder")
 public class AccountHolder implements Comparable{ 
 		private static long ID = 1;
 		
 		@Id
+		@Column(name="id")
 		private long id;
 	    // Class member variables 
 		@NotNull(message="First name can not be Null")
@@ -31,6 +38,11 @@ public class AccountHolder implements Comparable{
 	    private CheckingAccount[] checkingAccounts;
 	    private SavingsAccount[] savingsAccounts;
 	    private CDAccount[] CDAccounts;
+	    
+	    
+	    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	    @JoinColumn(name="id", referencedColumnName = "id")
+	    private AccountHolderContact accountHolderContact;
 	    
 	    // keep track of numbers of checkings and saving accounts
 	    private int numberOfCheckings = 0;
@@ -347,4 +359,16 @@ public class AccountHolder implements Comparable{
 		public void setId(int id) {
 			this.id = id;
 		}
+
+		public AccountHolderContact getAccountHolderContact() {
+			return accountHolderContact;
+		}
+
+		public void setAccountHolderContact(AccountHolderContact accountHolderContact) {
+			this.accountHolderContact = accountHolderContact;
+		}
+		
+		
+		
+		
 }

@@ -32,7 +32,7 @@ class MeritBankControllerTest {
 	@Test
 	public void test() throws Exception {
 		
-		Mockito.when(ahRepo.findAll()).thenReturn(Collections.emptyList());
+//		Mockito.when(ahRepo.findAll()).thenReturn(Collections.emptyList());
 		
 		MvcResult mvcResult = mockMvc.perform(
 				MockMvcRequestBuilders.get("/AccountHolders")
@@ -41,7 +41,7 @@ class MeritBankControllerTest {
 		
 		System.out.println(mvcResult.getResponse());
 		
-		Mockito.verify(ahRepo).findAll();
+//		Mockito.verify(ahRepo).findAll();
 	}
 
 }

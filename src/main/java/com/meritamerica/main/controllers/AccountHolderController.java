@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import com.meritamerica.main.exceptions.*;
 import com.meritamerica.main.models.*;
-import com.meritamerica.main.repositories.AccHolderContactRepo;
 import com.meritamerica.main.repositories.AccountHolderRepo;
 
 import org.slf4j.Logger;
@@ -45,7 +44,7 @@ public class AccountHolderController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder newAccountHolder) {
-		accHolderRepo.save(newAccountHolder);
+		newAccountHolder = accHolderRepo.save(newAccountHolder);
 		return newAccountHolder;
 	}
 	

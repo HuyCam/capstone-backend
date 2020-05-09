@@ -13,19 +13,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.meritamerica.main.models.AccountHolderContact;
-import com.meritamerica.main.repositories.AccHolderContactRepo;
+//import com.meritamerica.main.repositories.AccHolderContactRepo;
 
 //@RequestMapping(value="/contacts")
 //@RestController
 //public class AccountHolderContactController {
 //	@Autowired
 //	AccHolderContactRepo accHolderContactRepo;
-//	
-//	@GetMapping("/")
-//	@ResponseBody
-//	public String page() {
-//		return "Welcome to contact page";
-//	}
 //	
 //	@GetMapping("/getall")
 //	public List<AccountHolderContact> getContacts() {

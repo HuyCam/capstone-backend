@@ -1,23 +1,29 @@
 package com.meritamerica.main.models;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="account_holder_contact")
+@Table(name="accountholdercontact")
 public class AccountHolderContact {
 	
 	@Id
+	@Column(name="id")
 	private Long id;
 	private String phoneNo;
 	private String address;
 	
-	@OneToOne
-	@JoinColumn(name="id", referencedColumnName = "id")
-	private AccountHolder accHolder;
+//	@OneToOne(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "id", referencedColumnName = "id")
+//	private AccountHolder accountHolder;
+	
 	public AccountHolderContact() {
 		
 	}
@@ -45,5 +51,13 @@ public class AccountHolderContact {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
+//	public AccountHolder getAccountHolder() {
+//		return accountHolder;
+//	}
+//
+//	public void setAccountHolder(AccountHolder accountHolder) {
+//		this.accountHolder = accountHolder;
+//	}
+//	
 }
