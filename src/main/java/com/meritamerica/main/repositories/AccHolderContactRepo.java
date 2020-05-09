@@ -6,9 +6,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.meritamerica.main.models.AccountHolderContact;
 
-@RepositoryRestResource(path = "contact"
-,collectionResourceRel="contact"
-)
+@RepositoryRestResource(path = "contacts",collectionResourceRel="contacts")
 public interface AccHolderContactRepo extends CrudRepository<AccountHolderContact, Long> {
 	
 }

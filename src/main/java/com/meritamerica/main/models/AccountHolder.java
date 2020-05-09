@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -21,11 +23,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name="accountholder")
-
-public class AccountHolder implements Comparable{ 
-		private static long ID = 1;
-		
+public class AccountHolder implements Comparable{ 	
 		@Id
+		@GeneratedValue(strategy = GenerationType.TABLE)
 		@Column(name="id")
 		private long id;
 	    // Class member variables 
@@ -65,8 +65,6 @@ public class AccountHolder implements Comparable{
 	    }
 	    
 	    public AccountHolder (){	
-	    	this.id = AccountHolder.ID;
-	    	AccountHolder.ID++;
 	    	// instantiate array of Checkings
 	        checkingAccounts = new CheckingAccount[10];
 	        savingsAccounts = new SavingsAccount[10];
