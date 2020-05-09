@@ -1,7 +1,9 @@
 package com.meritamerica.main.models;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -43,28 +45,26 @@ public class AccountHolder implements Comparable{
 	    private String ssn;
 	    
 	    
-	    @OneToMany
-	    @JoinColumn(name="acc_holder_id", referencedColumnName = "id")
-	    @OrderColumn
-	    private CheckingAccount[] checkingAccounts;
+	    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accHolder")
+//	    @OrderColumn
+	    private List<CheckingAccount> checkingAccounts;
 	    
 	    
 	    private SavingsAccount[] savingsAccounts;
 	    private CDAccount[] CDAccounts;
 	    
 	    @OneToOne(mappedBy = "accountHolder",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	    @JsonIgnoreProperties("accountHolder")
 	    private AccountHolderContact accountHolderContact;
 	    
 	    // keep track of numbers of checkings and saving accounts
-	    private int numberOfCheckings = 0;
+//	    private int numberOfCheckings = 0;
 	    private int numberOfSavings = 0;
 	    private int numberOfCDAs = 0;
 
 	    
 	    public AccountHolder (){	
 	    	// instantiate array of Checkings
-	        checkingAccounts = new CheckingAccount[10];
+	        checkingAccounts = new ArrayList<>();
 	        savingsAccounts = new SavingsAccount[10];
 	        CDAccounts = new CDAccount[10]; 
 	    }
@@ -77,10 +77,10 @@ public class AccountHolder implements Comparable{
 	        this.ssn = ssn;
 	    }
 	    
-	    public void createCheckingArray(int numOfAccount) {
-	    	this.checkingAccounts = new CheckingAccount[numOfAccount];
-	    }
-	    
+//	    public void createCheckingArray(int numOfAccount) {
+//	    	this.checkingAccounts = new ArrayList<>();
+//	    }
+//	    
 	    public void createSavingArray(int numOfAccount) {
 	    	this.savingsAccounts = new SavingsAccount[numOfAccount];
 	    }
@@ -109,36 +109,35 @@ public class AccountHolder implements Comparable{
 		    	checkingAccount.addTransaction(tran);
 	    		
 		    	// increment numberOfCheckings currently have
-		    	this.numberOfCheckings++;
+//		    	this.numberOfCheckings++;
 		    	
 		    	// if numberOfChecking bigger than the account array
-		    	if (this.numberOfCheckings > this.checkingAccounts.length) {
-		    		this.checkingAccounts = this.extendCheckingArray();
-		    	}
+//		    	if (this.numberOfCheckings > this.checkingAccounts.length) {
+//		    		this.checkingAccounts = this.extendCheckingArray();
+//		    	}
 		    	
-		    	this.checkingAccounts[this.numberOfCheckings - 1] = checkingAccount;
+		    	this.checkingAccounts.add(checkingAccount);
 		    	
 		    	
 		    	
-		    	return this.checkingAccounts[this.numberOfCheckings - 1];
+		    	return checkingAccount;
 	    	} else {
 	    		throw new ExceedsCombinedBalanceLimitException();
 	    	}
 	    }
 	    
-	    public CheckingAccount[] getCheckingAccounts( ) {
-	    	CheckingAccount[] checkings = Arrays.copyOf(this.checkingAccounts, this.numberOfCheckings );
-	    	return checkings;
+	    public List<CheckingAccount> getCheckingAccounts( ) {
+	    	return this.checkingAccounts;
 	    }
 	    
-	    public int getNumberOfCheckingAccounts() {
-	    	return this.numberOfCheckings;
-	    }
+//	    public int getNumberOfCheckingAccounts() {
+//	    	return this.numberOfCheckings;
+//	    }
 	    
 	    public double getCheckingBalance() {
 	    	double total = 0;
-	    	for (int i=0; i < this.numberOfCheckings ; i++ ) {
-	    		total += this.checkingAccounts[i].getBalance();
+	    	for (int i=0; i < this.checkingAccounts.size() ; i++ ) {
+	    		total += this.checkingAccounts.get(i).getBalance();
 	    	}
 	    	
 	    	return total;
@@ -273,9 +272,9 @@ public class AccountHolder implements Comparable{
 		
 		// find the account has that ID in this account holder and return that account, if can not find, return null
 		public BankAccount findAccount(long ID) {
-			for (int i = 0; i < this.numberOfCheckings; i++) {
-				if (this.checkingAccounts[i].getAccountNumber() == ID) {
-					return this.checkingAccounts[i];
+			for (int i = 0; i < this.checkingAccounts.size(); i++) {
+				if (this.checkingAccounts.get(i).getAccountNumber() == ID) {
+					return this.checkingAccounts.get(i);
 				}
 			}
 			
@@ -294,16 +293,6 @@ public class AccountHolder implements Comparable{
 			return null;
 		}
 				
-		// extend account array capacity of 
-		public CheckingAccount[] extendCheckingArray() {
-			CheckingAccount[] checkings = new CheckingAccount[this.checkingAccounts.length * 2];
-			for (int i = 0; i < this.checkingAccounts.length; i++) {
-				checkings[i] = this.checkingAccounts[i];
-			}
-			
-			return checkings;
-		}
-		
 		// extend account array capacity 
 		public SavingsAccount[] extendSavingArray() {
 			SavingsAccount[] savings = new SavingsAccount[this.savingsAccounts.length * 2];
@@ -366,8 +355,4 @@ public class AccountHolder implements Comparable{
 		public void setAccountHolderContact(AccountHolderContact accountHolderContact) {
 			this.accountHolderContact = accountHolderContact;
 		}
-		
-		
-		
-		
 }

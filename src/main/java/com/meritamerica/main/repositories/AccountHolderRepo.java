@@ -7,7 +7,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import com.meritamerica.main.models.AccountHolder;
 
 
-@RepositoryRestResource(path = "AccountHolders",collectionResourceRel="AccountHolders")
-public interface AccountHolderRepo extends CrudRepository<AccountHolder, Long> {
+//@RepositoryRestResource(path = "AccountHolders",collectionResourceRel="AccountHolders")
+public interface AccountHolderRepo extends JpaRepository<AccountHolder, Long> {
 
 }

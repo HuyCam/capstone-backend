@@ -8,8 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 // SavingsAccount(child class) inherit methods and variables from BankAccount(parent class)
-@Entity
-@Table(name="savings_acount")
+
 public class SavingsAccount extends BankAccount {
 	private static double INTEREST_RATE = 0.01;
 	SavingsAccount(double balance, double interestRate){
