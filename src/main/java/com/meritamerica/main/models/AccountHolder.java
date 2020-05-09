@@ -16,8 +16,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name="accountholder")
+
 public class AccountHolder implements Comparable{ 
 		private static long ID = 1;
 		
@@ -39,9 +43,8 @@ public class AccountHolder implements Comparable{
 	    private SavingsAccount[] savingsAccounts;
 	    private CDAccount[] CDAccounts;
 	    
-	    
-	    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	    @JoinColumn(name="id", referencedColumnName = "id")
+	    @OneToOne(mappedBy = "accountHolder",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	    @JsonIgnoreProperties("accountHolder")
 	    private AccountHolderContact accountHolderContact;
 	    
 	    // keep track of numbers of checkings and saving accounts

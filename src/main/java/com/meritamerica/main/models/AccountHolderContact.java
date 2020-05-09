@@ -19,10 +19,13 @@ public class AccountHolderContact {
 	private Long id;
 	private String phoneNo;
 	private String address;
+	private String zipcode;
+	private String city;
+	private String state;
 	
-//	@OneToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "id", referencedColumnName = "id")
-//	private AccountHolder accountHolder;
+	@OneToOne
+	@JoinColumn(name="id")
+	private AccountHolder accountHolder;
 	
 	public AccountHolderContact() {
 		
@@ -52,12 +55,36 @@ public class AccountHolderContact {
 		this.id = id;
 	}
 
-//	public AccountHolder getAccountHolder() {
-//		return accountHolder;
-//	}
-//
-//	public void setAccountHolder(AccountHolder accountHolder) {
-//		this.accountHolder = accountHolder;
-//	}
-//	
+	public AccountHolder getAccountHolder() {
+		return accountHolder;
+	}
+
+	public void setAccountHolder(AccountHolder accountHolder) {
+		this.accountHolder = accountHolder;
+	}
+
+	public String getZipcode() {
+		return zipcode;
+	}
+
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+	
 }
