@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.persistence.Entity;
+
 public abstract class Transaction {
 	private BankAccount sourceAccount;
 	private BankAccount targetAccount;
@@ -109,6 +111,14 @@ public abstract class Transaction {
 	@Override
 	public String toString() {
 		return "Account number is: " + targetAccount.getAccountNumber() + " " + this.amount;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	
 	

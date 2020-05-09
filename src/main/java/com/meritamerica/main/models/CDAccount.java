@@ -24,29 +24,14 @@ public class CDAccount extends BankAccount {
 	}
 	
 	
-	CDAccount(int accNumb, double openingBalance, double interestRate, Date openDate, int term) {
-		super(accNumb, openingBalance, interestRate, openDate);
+	CDAccount(double openingBalance, double interestRate, Date openDate, int term) {
+		super( openingBalance, interestRate, openDate);
 		this.offering = new CDOffering(term, interestRate);
 	}	
 	
 	public CDAccount() {
 		super();
 		this.offering = new CDOffering();
-	}
-	
-	public static CDAccount readFromString(String accountData) throws ParseException {
-		String[] data = accountData.split(",");
-		
-		// Create a date formatter
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		
-		int accNumb = Integer.parseInt(data[0]);
-		double balance = Double.parseDouble(data[1]);
-		double interestRate = Double.parseDouble(data[2]);
-		Date openDate = formatter.parse(data[3]);
-		int term = Integer.parseInt(data[4]);
-	    
-	    return new CDAccount(accNumb, balance, interestRate, openDate, term);
 	}
 		
 	public double futureValue() {
@@ -71,16 +56,6 @@ public class CDAccount extends BankAccount {
 	
 	public double getInterestRate() {
 		return offering.getInterestRate();
-	}
-	
-	
-	@Override
-	public String writeToString() {
-		StringBuilder str = new StringBuilder();
-		
-		str.append(super.writeToString());
-		str.append("," + offering.getTerm());
-		return str.toString();
 	}
 
 	// CDA account can not do withdraw or deposit within the term period

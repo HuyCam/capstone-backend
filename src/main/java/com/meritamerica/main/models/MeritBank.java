@@ -13,7 +13,6 @@ import java.util.Date;
 import com.meritamerica.main.exceptions.*;
 
 public class MeritBank {
-	private static long accIndex = 0;
 	private static AccountHolder[] accountHolders = new AccountHolder[10];
 	private static CDOffering[] CDOfferings = new CDOffering[0];
 	
@@ -28,8 +27,7 @@ public class MeritBank {
 			MeritBank.accountHolders = accounts;
 		}
 		
-		MeritBank.accountHolders[MeritBank.numbOfAccountHolder - 1] = accountHolder;
-		
+		MeritBank.accountHolders[MeritBank.numbOfAccountHolder - 1] = accountHolder;	
 	}
 	
 	public static void addCDOffering(CDOffering offering) {
@@ -85,153 +83,6 @@ public class MeritBank {
 	        return String.format("%s",d);
 	} 
 	
-	/*
-	 * Write Merit Bank data to file
-	 */
-	public static boolean writeToFile(String fileName) {
-		StringBuilder data = new StringBuilder();
-		// add NextNumber
-		data.append(Long.toString(MeritBank.getNextAccountNumber()) + "\n") ;
-		// add account CDOffering --------------------------------------
-		// add number of CDOfferings
-		data.append(Integer.toString(MeritBank.CDOfferings.length)  + "\n");
-		
-		// add CDOffering
-		for (CDOffering offering: CDOfferings) {
-			data.append(offering.getTerm() + "," + offering.getInterestRate() + "\n");
-		}
-		
-		// add account holder -----------------------------------------
-		// add number of account holders
-		data.append(Integer.toString(MeritBank.accountHolders.length) + "\n");
-		
-		for (AccountHolder accountHolder: MeritBank.accountHolders) {
-			// add account holder information
-			data.append(accountHolder.getFirstName() + "," + accountHolder.getMiddleName() + "," 
-			+ accountHolder.getLastName()+ "," + accountHolder.getSSN() + "\n");
-			// add checkings
-			data.append(MeritBank.addCheckingData(accountHolder)) ;
-			// add savings
-			data.append(MeritBank.addSavingData(accountHolder));
-			// add CDAccount
-			data.append(MeritBank.addCDData(accountHolder));
-		}
-	
-		// start writing into file
-		try {
-			FileWriter writer = new FileWriter(fileName);
-	        writer.write(data.toString());
-	        writer.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}	
-		return true;
-	}
-	
-	public static boolean readFromFile(String fileName) {
-		 try {
-	            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-	            String line = "";
-	            int numOfCDOfferings;
-	            int numOfAccountHolders;
-	            int numOfCheckings;
-	            int numbOfSavings;
-	            int numbOfCDAccounts;
-	            // Process next account number
-	            line = reader.readLine();
-	            MeritBank.setNextAccountNumber(Integer.parseInt(line));
-	            
-	            // CD offerings-----------------------------------------------------------------
-	            line = reader.readLine();
-	            numOfCDOfferings = Integer.parseInt(line);
-	            
-	            // create a array of CDOffering
-	            CDOfferings = new CDOffering[numOfCDOfferings];
-	            // read all the CDOfferings in and create all of them
-	            for (int i = 0; i < numOfCDOfferings; i++) {
-	            	line = reader.readLine().trim(); // trim() is a String method to get rid of white space before and after a line.
-	            	CDOfferings[i] = CDOffering.readFromString(line);
-	            }
-	            
-	            // Account holders--------------------------------------------------------------
-	            line = reader.readLine();
-	            numOfAccountHolders = Integer.parseInt(line);
-	            
-	            accountHolders = new AccountHolder[numOfAccountHolders];
-	            
-	            for (int j = 0; j < numOfAccountHolders; j++) {
-	            	try {
-	            		line = reader.readLine();
-		            	// create account holder 
-		            	AccountHolder acc = AccountHolder.readFromString(line);
-		            	// process checking account
-		            	line = reader.readLine();
-		            	numOfCheckings = Integer.parseInt(line);
-		            	
-		            	acc.createCheckingArray(numOfCheckings);
-		            	
-		            	for (int x = 0; x < numOfCheckings; x++) {
-		            		CheckingAccount checkAcc = CheckingAccount.readFromString(reader.readLine());
-		            		// process transaction inside the account
-		            		MeritBank.readTransactions(reader, checkAcc);
-		            		
-		            		
-		            		acc.addCheckingAccount(checkAcc);
-		            		
-		            	}
-		            	// process saving account
-		            	line = reader.readLine();
-		            	numbOfSavings = Integer.parseInt(line);
-		            	
-		            	acc.createSavingArray(numbOfSavings);
-		            	
-		            	for (int y = 0; y < numbOfSavings; y++) {
-		            		SavingsAccount savingAcc = SavingsAccount.readFromString(reader.readLine());
-		            		
-		            		// process transaction inside the account
-		            		MeritBank.readTransactions(reader, savingAcc);
-		            		
-		            		acc.addSavingsAccount(savingAcc);
-		            	}	            	
-		            	
-		            	// process CD account
-		            	numbOfCDAccounts = Integer.parseInt(reader.readLine());
-		            	
-		            	acc.createCDAccounts(numbOfCDAccounts);            	
-		            	
-		            	for (int z = 0; z < numbOfCDAccounts; z++) {
-		            		CDAccount CDOAcc = CDAccount.readFromString(reader.readLine());
-		            		
-		            		// process transaction inside the account
-		            		MeritBank.readTransactions(reader, CDOAcc);
-		            		
-		            		acc.addCDAccount(CDOAcc);
-		            	}
-		            	
-		            	// add account holder to the array
-		            	accountHolders[j] = acc;
-		       
-	            	} catch(Exception e) {
-	            		e.printStackTrace();
-	            		System.out.println("something worng");
-	            		return false;
-	            	}	
-	            }
-	            
-	            
-	            // read FraudQueue
-            	MeritBank.readFraudQueue(reader);
-	            
-	            reader.close();
-	        } catch (Exception e) {
-	        	System.out.println("Exception");
-	        	e.printStackTrace();
-	            return false;
-	        }
-		 
-		 return true;
-	}
-	
 	private static void readFraudQueue(BufferedReader reader) throws IOException, ParseException {
 		int pendingNum = Integer.parseInt(reader.readLine());
 	
@@ -265,56 +116,7 @@ public class MeritBank {
 			return new TransferTransaction(sourceAcc, targetAcc, amount, date);
 		}
 	}
-	
-	private static void readTransactions(BufferedReader reader, BankAccount acc) throws IOException, ParseException, 
-	  ExceedsFraudSuspicionLimitException, NegativeAmountException, ExceedsAvailableBalanceException {
-		int numOfTransaction = Integer.valueOf(reader.readLine()); // number of transactions
-		
-		for (int i = 0; i < numOfTransaction; i++) {
-			String line = reader.readLine();
-			String[] datas = line.split(",");
-			
-			// Create a date formatter
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-			
-			int sourceID = Integer.parseInt(datas[0]);
-			int targetID = Integer.parseInt(datas[1]);
-			double amount = Double.parseDouble(datas[2]);
-			Date date = formatter.parse(datas[3]);
-			
-			// if this is not a transfer transaction
-			if (sourceID != -1) {
-				if (amount >= 0) {
-					acc.addTransaction(new DepositTransaction(acc, amount, date));
-				} else {
-					acc.addTransaction(new WithdrawTransaction(acc, amount, date));
-				}
-			} else {
-				// if this is a transfer transaction
-				BankAccount sourceAcc = MeritBank.findAccount(sourceID);
-				acc.addTransaction(new TransferTransaction(sourceAcc, acc, amount, date));
-			}
-		}
-	}
-	
-	private static String addSavingData(AccountHolder acc) {
-		StringBuilder data = new StringBuilder();
-		int numbOfSavings = 0;
-		SavingsAccount[] savings = acc.getSavingsAccounts();
-		
-		for (int i = 0; i < savings.length; i++) {
-			if (savings[i] == null) {
-				break;
-			}
-			
-			// increase number of checking
-			numbOfSavings++;
-			
-			data.append(savings[i].writeToString() + "\n");
-		}
-		
-		return numbOfSavings + "\n" + data.toString();
-	}
+
 	
 	// sort account from small to large
 	public static AccountHolder[] sortAccountHolders() {
@@ -333,47 +135,6 @@ public class MeritBank {
         }
         
         return accountHolder;
-	}
-	
-	private static String addCDData(AccountHolder acc) {
-		StringBuilder data = new StringBuilder();
-		int numbOfCDs = 0;
-		CDAccount[] cds = acc.getCDAccounts();
-		
-		for (int i = 0; i < cds.length; i++) {
-			if (cds[i] == null) {
-				break;
-			}
-			
-			// increase num of checking
-			numbOfCDs++;
-			
-			data.append(cds[i].writeToString() + "\n");
-		}
-		
-		return numbOfCDs + "\n" + data.toString();
-	}
-	
-	/*
-	 * convert all the needed checking account information to String and return
-	 */
-	private static String addCheckingData(AccountHolder acc) {
-		StringBuilder data = new StringBuilder();
-		int numbOfCheckings = 0;
-		CheckingAccount[] checkings = acc.getCheckingAccounts();
-		
-		for (int i = 0; i < checkings.length; i++) {
-			if (checkings[i] == null) {
-				break;
-			}
-			
-			// increase num of checking
-			numbOfCheckings++;
-			
-			data.append(checkings[i].writeToString() + "\n");
-		}
-		
-		return numbOfCheckings + "\n" + data.toString();
 	}
 	
 	public static AccountHolder[] getAccountHolders() {
@@ -444,15 +205,7 @@ public class MeritBank {
 		CDOfferings = offerings; 
 	}
 	
-	public static long getNextAccountNumber() {
-		// get back later
-		MeritBank.accIndex++;
-		return accIndex;
-	}
-	
-	public static void setNextAccountNumber(long nextAccountNumb) {
-		MeritBank.accIndex = nextAccountNumb - 1;
-	}
+
 	
 	public static double totalBalances() {
 		double total = 0.0;

@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name="accountholder")
 public class AccountHolder implements Comparable{ 	
 		@Id
-		@GeneratedValue(strategy = GenerationType.TABLE)
+		@GeneratedValue(strategy = GenerationType.AUTO)
 		@Column(name="id")
 		private long id;
 	    // Class member variables 
