@@ -47,7 +47,7 @@ public class AccountHolderController {
 	
 	@Autowired
 	CDAccountRepo cdaccRepo;
-//	
+	
 	@Autowired
 	CDOfferRepo cdofferingRepo;
 	
@@ -151,6 +151,4 @@ public class AccountHolderController {
 			throw new NotFoundException("CD Account is Not Found ");
 		}
 	}
-	
-
 }
