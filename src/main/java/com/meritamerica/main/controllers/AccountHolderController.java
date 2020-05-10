@@ -40,26 +40,6 @@ public class AccountHolderController {
 	@Autowired
 	AccountHolderService accHolderService;
 	
-	
-	/*
-	 * Repos
-	 */
-	@Autowired
-	AccountHolderRepo accHolderRepo;
-	
-	@Autowired
-	CheckingAccountRepo checkingRepo;
-	
-	@Autowired
-	SavingAccountRepo savingRepo;
-	
-	@Autowired
-	CDAccountRepo cdaccRepo;
-	
-	@Autowired
-	CDOfferRepo cdofferingRepo;
-	
-	
 	@PostMapping(value = "/") 
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
@@ -97,21 +77,12 @@ public class AccountHolderController {
 	public SavingsAccount addSaving(@PathVariable("id") long id, @RequestBody @Valid SavingsAccount savings ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
 	NegativeAmountException
 	{	
-		AccountHolder account = this.getAccountHolder(id);
-		savings.setAccHolder(account);
-		savings = savingRepo.save(savings);
-		return savings;
+		return this.accHolderService.addSaving(id, savings);
 	}
 	
 	@GetMapping(value="/{id}/SavingsAccounts")
 	public List<SavingsAccount> getSavings(@PathVariable("id") long id) throws NotFoundException {
-		Optional<AccountHolder> account = accHolderRepo.findById(id);
-		
-		if (account.isPresent()) {
-			return account.get().getSavingsAccounts();
-		} else {
-			throw new NotFoundException("Saving Account is Not Found ");
-		}
+		return this.accHolderService.getSavings(id);
 	}
 
 	@PostMapping(value="/{id}/CDAccounts")
@@ -119,21 +90,11 @@ public class AccountHolderController {
 	public CDAccount addCDAccount(@PathVariable("id") long id, @RequestBody @Valid CDAccount CDAccount ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
 	NegativeAmountException, ExceedsFraudSuspicionLimitException, FieldErrorException
 	{			
-		AccountHolder account = this.getAccountHolder(id);				
-		CDAccount.setAccHolder(account);
-		CDAccount = cdaccRepo.save(CDAccount);
-
-		return CDAccount;
+		return this.accHolderService.addCDAccount(id, CDAccount);
 	}
 	
 	@GetMapping(value="/{id}/CDAccounts")
 	public List<CDAccount> getCDAccounts(@PathVariable("id") long id) throws NotFoundException {
-		Optional<AccountHolder> account = accHolderRepo.findById(id);
-		
-		if (account.isPresent()) {
-			return account.get().getCDAccounts();
-		} else {
-			throw new NotFoundException("CD Account is Not Found ");
-		}
+		return this.accHolderService.getCDAccounts(id);
 	}
 }
