@@ -31,12 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value="/AccountHolders")
 @RestController
 public class AccountHolderController {
-	
 	Logger logger = LoggerFactory.getLogger(AccountHolderController.class);
-	
-	/*
-	 * Services 
-	 */
+
 	@Autowired
 	AccountHolderService accHolderService;
 	
