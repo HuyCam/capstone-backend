@@ -12,6 +12,7 @@ import com.meritamerica.main.repositories.CDAccountRepo;
 import com.meritamerica.main.repositories.CDOfferRepo;
 import com.meritamerica.main.repositories.CheckingAccountRepo;
 import com.meritamerica.main.repositories.SavingAccountRepo;
+import com.meritamerica.main.services.AccountHolderService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,9 @@ public class AccountHolderController {
 	Logger logger = LoggerFactory.getLogger(AccountHolderController.class);
 	
 	@Autowired
+	AccountHolderService accHolderService;
+	
+	@Autowired
 	AccountHolderRepo accHolderRepo;
 	
 	@Autowired
@@ -48,29 +52,23 @@ public class AccountHolderController {
 	@Autowired
 	CDOfferRepo cdofferingRepo;
 	
+	
 	@PostMapping(value = "/") 
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
-	public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder newAccountHolder) {
-		newAccountHolder = accHolderRepo.save(newAccountHolder);
-		return newAccountHolder;
+	public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder newAccountHolder) {	
+		return  this.accHolderService.createAccountHolder(newAccountHolder);
 	}
 	
 	@GetMapping(value="/")
 	public List<AccountHolder> getAccountHolders() {
-		return accHolderRepo.findAll();
+		return this.accHolderService.getAccountHolders();
 	}
 	
 	@GetMapping(value="/{id}") 
 	public AccountHolder getAccountHolder(@PathVariable("id") long id) throws NotFoundException
 	{
-		try {
-			Optional<AccountHolder> account = accHolderRepo.findById(id);
-			
-			return account.get();
-		} catch(Exception e) {
-			throw new NotFoundException("No account exists");
-		}
+		return this.accHolderService.getAccountHolder(id);
 	}
 	
 	
