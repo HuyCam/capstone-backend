@@ -19,7 +19,7 @@ public class MeritBank {
 	private static int numbOfAccountHolder = 0;
 	public static FraudQueue fraudQueue = new FraudQueue();
 	
-	public static void addAccountHolder(AccountHolder accountHolder) {
+	public static AccountHolder addAccountHolder(AccountHolder accountHolder) {
 		MeritBank.numbOfAccountHolder++;
 		
 		if (MeritBank.numbOfAccountHolder >= MeritBank.accountHolders.length) {
@@ -28,6 +28,8 @@ public class MeritBank {
 		}
 		
 		MeritBank.accountHolders[MeritBank.numbOfAccountHolder - 1] = accountHolder;	
+		
+		return accountHolder;
 	}
 	
 	public static void addCDOffering(CDOffering offering) {
