@@ -26,6 +26,7 @@ public class BankAccount {
 	// member variables of BankAccount class
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="account_number")
 	protected long accountNumber;
 	
 	@Positive

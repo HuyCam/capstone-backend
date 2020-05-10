@@ -34,9 +34,16 @@ public class AccountHolderController {
 	
 	Logger logger = LoggerFactory.getLogger(AccountHolderController.class);
 	
+	/*
+	 * Services 
+	 */
 	@Autowired
 	AccountHolderService accHolderService;
 	
+	
+	/*
+	 * Repos
+	 */
 	@Autowired
 	AccountHolderRepo accHolderRepo;
 	
@@ -77,29 +84,12 @@ public class AccountHolderController {
 	public CheckingAccount addChecking(@PathVariable("id") long id, @RequestBody @Valid CheckingAccount checking ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
 	NegativeAmountException
 	{				
-		AccountHolder account = this.getAccountHolder(id);
-	/*
-	 * Why account can not save checking but checking has to save account
-	 */
-//		account.addCheckingAccount(checking);
-//		
-//		accHolderRepo.save(account);
-		
-		checking.setAccHolder(account);
-		checking = checkingRepo.save(checking);
-		
-		return checking;
+		return this.accHolderService.addChecking(id, checking);
 	}
 	
 	@GetMapping(value="/{id}/CheckingAccounts")
 	public List<CheckingAccount> getChecking(@PathVariable("id") long id) throws NotFoundException {
-		Optional<AccountHolder> account = accHolderRepo.findById(id);
-		
-		if (account.isPresent()) {
-			return account.get().getCheckingAccounts();
-		} else {
-			throw new NotFoundException("Checking Account is Not Found ");
-		}
+		return this.accHolderService.getChecking(id);
 	}
 	
 	@PostMapping(value="/{id}/SavingsAccounts")
