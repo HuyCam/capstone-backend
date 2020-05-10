@@ -8,6 +8,8 @@ import javax.validation.Valid;
 import com.meritamerica.main.exceptions.*;
 import com.meritamerica.main.models.*;
 import com.meritamerica.main.repositories.AccountHolderRepo;
+import com.meritamerica.main.repositories.CDAccountRepo;
+import com.meritamerica.main.repositories.CDOfferRepo;
 import com.meritamerica.main.repositories.CheckingAccountRepo;
 import com.meritamerica.main.repositories.SavingAccountRepo;
 
@@ -42,6 +44,12 @@ public class AccountHolderController {
 	
 	@Autowired
 	SavingAccountRepo savingRepo;
+	
+	@Autowired
+	CDAccountRepo cdaccRepo;
+//	
+	@Autowired
+	CDOfferRepo cdofferingRepo;
 	
 	@PostMapping(value = "/") 
 	@ResponseStatus(HttpStatus.CREATED)
@@ -117,40 +125,32 @@ public class AccountHolderController {
 		if (account.isPresent()) {
 			return account.get().getSavingsAccounts();
 		} else {
-			throw new NotFoundException("Checking Account is Not Found ");
+			throw new NotFoundException("Saving Account is Not Found ");
 		}
 	}
-//	
-//	@PostMapping(value="/{id}/CDAccounts")
-//	@ResponseStatus(HttpStatus.CREATED)
-//	public CDAccount addCDAccount(@PathVariable("id") long id, @RequestBody @Valid CDAccount CDAccount ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
-//	NegativeAmountException, ExceedsFraudSuspicionLimitException, FieldErrorException
-//	{			
-//		AccountHolder account = this.getAccountHolder(id);				
-//
-//		account.addCDAccount(CDAccount);
-//		
-//		return CDAccount;
-//	}
-//	
-//	@GetMapping(value="/{id}/CDAccounts")
-//	public CDAccount[] getCDAccounts(@PathVariable("id") long id) throws NotFoundException {
-//		AccountHolder account = this.getAccountHolder(id);
-//		
-//		return account.getCDAccounts();
-//	}
-//	
-//	@PostMapping("/CDOfferings")
-//	@ResponseStatus(HttpStatus.CREATED)
-//	public CDOffering createCDOffering(@RequestBody @Valid CDOffering offering) throws FieldErrorException {				
-//		MeritBank.addCDOffering(offering);
-//		return offering;
-//	}
-//	
-//	@GetMapping("/CDOfferings")
-//	public CDOffering[] getCDOfferings() throws NotFoundException {
-//		CDOffering[] cdOfferings = MeritBank.getCDOfferings();
-//	    return cdOfferings;
-//	}
+
+	@PostMapping(value="/{id}/CDAccounts")
+	@ResponseStatus(HttpStatus.CREATED)
+	public CDAccount addCDAccount(@PathVariable("id") long id, @RequestBody @Valid CDAccount CDAccount ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
+	NegativeAmountException, ExceedsFraudSuspicionLimitException, FieldErrorException
+	{			
+		AccountHolder account = this.getAccountHolder(id);				
+		CDAccount.setAccHolder(account);
+		CDAccount = cdaccRepo.save(CDAccount);
+
+		return CDAccount;
+	}
 	
+	@GetMapping(value="/{id}/CDAccounts")
+	public List<CDAccount> getCDAccounts(@PathVariable("id") long id) throws NotFoundException {
+		Optional<AccountHolder> account = accHolderRepo.findById(id);
+		
+		if (account.isPresent()) {
+			return account.get().getCDAccounts();
+		} else {
+			throw new NotFoundException("CD Account is Not Found ");
+		}
+	}
+	
+
 }

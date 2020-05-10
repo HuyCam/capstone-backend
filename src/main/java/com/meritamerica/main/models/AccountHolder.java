@@ -51,22 +51,20 @@ public class AccountHolder implements Comparable{
 	    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accHolder")
 	    private List<SavingsAccount> savingsAccounts;
 	    
-	    
-	    private CDAccount[] CDAccounts;
+	    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accHolder")
+	    private List<CDAccount> CDAccounts;
 	    
 	    @OneToOne(mappedBy = "accountHolder",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	    private AccountHolderContact accountHolderContact;
 	    
-	    // keep track of numbers of checkings and saving accounts
-	    private int numberOfCDAs = 0;
 
-	    
 	    public AccountHolder (){	
 	    	// instantiate array of Checkings
 	        checkingAccounts = new ArrayList<>();
 	        savingsAccounts = new ArrayList<>();
-	        CDAccounts = new CDAccount[10]; 
+	        CDAccounts = new ArrayList<>();
 	    }
+	    
 	    public AccountHolder(String firstName, String middleName, String lastName, String ssn){
 	    	this();
 	    	
@@ -75,12 +73,6 @@ public class AccountHolder implements Comparable{
 	        this.lastName = lastName;
 	        this.ssn = ssn;
 	    }
-	    
-	    public void createCDAccounts(int numOfAccount) {
-	    	this.CDAccounts = new CDAccount[numOfAccount];
-	    }
-	    
-	   
 	    
 	    public CheckingAccount addCheckingAccount(double openingBalance) throws ExceedsCombinedBalanceLimitException {
 	    	CheckingAccount acc = new CheckingAccount(openingBalance);
@@ -107,10 +99,6 @@ public class AccountHolder implements Comparable{
 	    public List<CheckingAccount> getCheckingAccounts( ) {
 	    	return this.checkingAccounts;
 	    }
-	    
-//	    public int getNumberOfCheckingAccounts() {
-//	    	return this.numberOfCheckings;
-//	    }
 	    
 	    public double getCheckingBalance() {
 	    	double total = 0;
@@ -161,12 +149,7 @@ public class AccountHolder implements Comparable{
 	    
 	    //Should also add a deposit transaction with the opening balance
 	    public CDAccount addCDAccount(CDAccount cdAccount) throws ExceedsFraudSuspicionLimitException {
-	    	this.numberOfCDAs++;
 	    	
-	    	// check CDAccount array capacity
-	    	if (this.numberOfCDAs > this.CDAccounts.length) {
-	    		this.CDAccounts = this.extendCDArray();
-	    	}
 	    	
 	    	// check fraud
 	    	DepositTransaction tran = new DepositTransaction(cdAccount, cdAccount.getBalance(), new Date());
@@ -174,24 +157,15 @@ public class AccountHolder implements Comparable{
 	    	cdAccount.addTransaction(tran);
 	    	
 	    	
-	    	this.CDAccounts[this.numberOfCDAs - 1] = cdAccount;
+	    	this.CDAccounts.add(cdAccount);
 	    	
-	    	return this.CDAccounts[this.numberOfCDAs - 1];
-	    }
-	    
-	    public CDAccount[] getCDAccounts() {
-	    	CDAccount[] cds = Arrays.copyOf(this.CDAccounts, this.numberOfCDAs);
-	    	return cds;
-	    }
-	    
-	    public int getNumberOfCDAccounts() {
-	    	return this.numberOfCDAs;
+	    	return cdAccount;
 	    }
 	    
 	    public double getCDBalance() {
 	    	double total = 0;
-	    	for (int i=0; i < this.numberOfCDAs; i++ ) {
-	    		total += this.CDAccounts[i].getBalance();
+	    	for (int i=0; i < this.CDAccounts.size(); i++ ) {
+	    		total += this.CDAccounts.get(i).getBalance();
 	    	}
 	    	
 	    	return total;
@@ -236,25 +210,14 @@ public class AccountHolder implements Comparable{
 				}
 			}
 			
-			for (int j = 0; j < this.numberOfCDAs; j++) {
-				if (this.CDAccounts[j].getAccountNumber() == ID) {
-					return this.CDAccounts[j];
+			for (int j = 0; j < this.CDAccounts.size(); j++) {
+				if (this.CDAccounts.get(j).getAccountNumber() == ID) {
+					return this.CDAccounts.get(j);
 				}
 			}
 			
 			return null;
 		}				
-		
-		// extend account array capacity 
-		public CDAccount[] extendCDArray() {
-			CDAccount[] cds = new CDAccount[this.CDAccounts.length * 2];
-			
-			for (int i = 0; i < this.CDAccounts.length; i++) {
-				cds[i] = this.CDAccounts[i];
-			}
-			
-			return cds;
-		}
 				 
 	    public String getFirstName() {
 	        return firstName;
@@ -304,5 +267,17 @@ public class AccountHolder implements Comparable{
 	    
 	    public void setSavingsAccounts(List<SavingsAccount> savingsAccounts) {
 			this.savingsAccounts = savingsAccounts;
+		}
+	    
+	    public List<CDAccount> getCDAccounts() {
+	    	return this.CDAccounts;
+	    }
+
+		public void setCheckingAccounts(List<CheckingAccount> checkingAccounts) {
+			this.checkingAccounts = checkingAccounts;
+		}
+
+		public void setCDAccounts(List<CDAccount> cDAccounts) {
+			CDAccounts = cDAccounts;
 		}
 }

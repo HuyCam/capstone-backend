@@ -1,10 +1,20 @@
 package com.meritamerica.main.models;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 // This CDoffering class gets the term and interest rate by two getter methods
+@Entity
 public class CDOffering {
 	@NotNull
 	@Positive
@@ -12,6 +22,14 @@ public class CDOffering {
 	@NotNull
 	@Positive
 	private double interestRate;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="offer_id")
+	private long id;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "offering")
+	private List<CDAccount> cdAccount;
 	
 	public CDOffering() {
 		
@@ -25,7 +43,6 @@ public class CDOffering {
 		return new CDOffering(term, interestRate);
 	}
 	
-	// constructor and parameters
 	public CDOffering(int term, double interestRate) {
 		this.term = term;
 		this.interestRate = interestRate;
@@ -48,6 +65,22 @@ public class CDOffering {
 	
 	public void setTerm(int years) {
 		this.term = years;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public List<CDAccount> getCdAccount() {
+		return cdAccount;
+	}
+
+	public void setCdAccount(List<CDAccount> cdAccount) {
+		this.cdAccount = cdAccount;
 	}
 	
 }

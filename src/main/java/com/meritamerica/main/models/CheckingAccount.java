@@ -18,9 +18,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class CheckingAccount extends BankAccount {
 	private static double INTEREST_RATE = 0.0001;
 	
-//	@NotNull
-//	@Column(name="acc_holder_id")
-//	private long accountHolderId;
 	@ManyToOne
 	@JoinColumn(name="id")
 	private AccountHolder accHolder;
