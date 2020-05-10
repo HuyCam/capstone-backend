@@ -15,7 +15,7 @@ import javax.validation.constraints.Positive;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@JsonIgnoreProperties(value = { "accHolder", "offering" })
+@JsonIgnoreProperties(value = { "accHolder", "offering", "transactions"  })
 public class CDAccount extends BankAccount {
 	@NotNull
 	@Positive

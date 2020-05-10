@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 	// CheckingAccount(child class) inherit methods and variables from BankAccount(parent class)
 @Entity
 @Table(name="checking_account")
-@JsonIgnoreProperties(value = { "accHolder" })
+@JsonIgnoreProperties(value = { "accHolder", "transactions" })
 public class CheckingAccount extends BankAccount {
 	private static double INTEREST_RATE = 0.0001;
 	

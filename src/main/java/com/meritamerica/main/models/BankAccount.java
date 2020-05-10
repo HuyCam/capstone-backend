@@ -19,7 +19,7 @@ import javax.validation.constraints.Positive;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(value = { "transactions" })
+
 @MappedSuperclass
 public class BankAccount {
 	

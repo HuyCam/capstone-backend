@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 // SavingsAccount(child class) inherit methods and variables from BankAccount(parent class)
 @Entity
-@JsonIgnoreProperties(value = { "accHolder" })
+@JsonIgnoreProperties(value = { "accHolder", "transactions"  })
 public class SavingsAccount extends BankAccount {
 	
 	@ManyToOne
