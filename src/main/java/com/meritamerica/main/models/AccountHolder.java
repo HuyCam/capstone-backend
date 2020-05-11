@@ -18,6 +18,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="accountholder")
 public class AccountHolder implements Comparable{ 	
@@ -48,6 +50,7 @@ public class AccountHolder implements Comparable{
 	    private List<CDAccount> CDAccounts;
 	    
 	    @OneToOne(mappedBy = "accountHolder",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	    @JsonManagedReference
 	    private AccountHolderContact accountHolderContact;
 	    
 

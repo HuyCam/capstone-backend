@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name="accountholdercontact")
 public class AccountHolderContact {
@@ -23,6 +25,7 @@ public class AccountHolderContact {
 	
 	@OneToOne
 	@JoinColumn(name="id")
+	@JsonBackReference
 	private AccountHolder accountHolder;
 	
 	public AccountHolderContact() {
