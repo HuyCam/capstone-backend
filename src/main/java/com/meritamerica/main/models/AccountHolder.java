@@ -24,9 +24,11 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="accountholder")
+//@JsonIgnoreProperties(value = { "accountHolderContact" })
 public class AccountHolder implements Comparable{ 	
 		@Id
 		@GeneratedValue(strategy = GenerationType.AUTO)
@@ -54,6 +56,7 @@ public class AccountHolder implements Comparable{
 	    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accHolder")
 	    private List<CDAccount> CDAccounts;
 	    
+	    @JsonManagedReference
 	    @OneToOne(mappedBy = "accountHolder",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	    private AccountHolderContact accountHolderContact;
 	    

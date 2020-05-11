@@ -10,8 +10,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name="accountholdercontact")
+@JsonIgnoreProperties(value = { "acountHolder" })
 public class AccountHolderContact {
 	
 	@Id
@@ -25,6 +29,7 @@ public class AccountHolderContact {
 	
 	@OneToOne
 	@JoinColumn(name="id")
+	@JsonBackReference
 	private AccountHolder accountHolder;
 	
 	public AccountHolderContact() {
