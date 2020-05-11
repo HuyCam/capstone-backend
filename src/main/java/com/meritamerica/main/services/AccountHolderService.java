@@ -21,7 +21,6 @@ import com.meritamerica.main.models.CheckingAccount;
 import com.meritamerica.main.models.ExceedsCombinedBalanceLimitException;
 import com.meritamerica.main.models.ExceedsFraudSuspicionLimitException;
 import com.meritamerica.main.models.FieldErrorException;
-import com.meritamerica.main.models.MeritBank;
 import com.meritamerica.main.models.NegativeAmountException;
 import com.meritamerica.main.models.SavingsAccount;
 import com.meritamerica.main.repositories.AccountHolderRepo;
@@ -61,7 +60,6 @@ public class AccountHolderService {
 	 * @return a account holder has been processed by database.
 	 */
 	public AccountHolder createAccountHolder(AccountHolder newAccountHolder) {
-		newAccountHolder = MeritBank.addAccountHolder(newAccountHolder);
 		newAccountHolder =  accHolderRepo.save(newAccountHolder);
 		return newAccountHolder;
 	}

@@ -38,7 +38,6 @@ public class AccountHolderController {
 	
 	@PostMapping(value = "/") 
 	@ResponseStatus(HttpStatus.CREATED)
-	@ResponseBody
 	public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder newAccountHolder) {	
 		return  this.accHolderService.createAccountHolder(newAccountHolder);
 	}

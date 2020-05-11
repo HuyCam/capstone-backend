@@ -2,7 +2,9 @@ package com.myunitest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,31 +19,44 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.meritamerica.main.controllers.AccountHolderController;
+import com.meritamerica.main.models.AccountHolder;
 import com.meritamerica.main.repositories.AccountHolderRepo;
+import com.meritamerica.main.services.AccountHolderService;
+
 
 @RunWith(SpringRunner.class)
-@WebMvcTest
+@WebMvcTest(value = AccountHolderController.class)
 class MeritBankControllerTest {
-
 	@Autowired
-	MockMvc mockMvc;
-
+	private MockMvc mockMvc;
+	
 	@MockBean
-	AccountHolderRepo ahRepo;
+	private AccountHolderService accHolderService;
+	
+	private List<AccountHolder> a = new ArrayList<>();
 	
 	@Test
-	public void test() throws Exception {
-		
-//		Mockito.when(ahRepo.findAll()).thenReturn(Collections.emptyList());
-		
-		MvcResult mvcResult = mockMvc.perform(
-				MockMvcRequestBuilders.get("/AccountHolders")
-				.accept(MediaType.APPLICATION_JSON)
-				).andReturn();
-		
-		System.out.println(mvcResult.getResponse());
-		
-//		Mockito.verify(ahRepo).findAll();
+	public void retrieveDetailsForCourse() throws Exception {
+
+		Mockito.when(
+				accHolderService.getAccountHolders()).thenReturn(a);
+
+//		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
+//				"/students/Student1/courses/Course1").accept(
+//				MediaType.APPLICATION_JSON);
+//
+//		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+//
+//		System.out.println(result.getResponse());
+//		String expected = "{id:Course1,name:Spring,description:10 Steps}";
+//
+//		// {"id":"Course1","name":"Spring","description":"10 Steps, 25 Examples and 10K Students","steps":["Learn Maven","Import Project","First Example","Second Example"]}
+//
+//		JSONAssert.assertEquals(expected, result.getResponse()
+//				.getContentAsString(), false);
 	}
+
+
 
 }

@@ -84,42 +84,7 @@ public class MeritBank {
 	    else
 	        return String.format("%s",d);
 	} 
-	
-	private static void readFraudQueue(BufferedReader reader) throws IOException, ParseException {
-		int pendingNum = Integer.parseInt(reader.readLine());
-	
-		for (int i= 0; i < pendingNum; i++) {
-			MeritBank.fraudQueue.addTransaction(readTransactionType(reader.readLine()));
-		}
-	}
-	
-	private static Transaction readTransactionType(String line) throws ParseException {
-		String[] datas = line.split(",");
-		
-		// Create a date formatter
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		
-		int sourceID = Integer.parseInt(datas[0]);
-		int targetID = Integer.parseInt(datas[1]);
-		BankAccount targetAcc = MeritBank.findAccount(targetID);
-		double amount = Integer.parseInt(datas[2]);
-		Date date = formatter.parse(datas[3]);
-		
-		// if this is not a transfer transaction
-		if (sourceID != -1) {
-			if (amount >= 0) {
-				return new DepositTransaction(targetAcc, amount, date);
-			} else {
-				return new WithdrawTransaction(targetAcc, amount, date);
-			}
-		} else {
-			// if this is a transfer transaction
-			BankAccount sourceAcc = MeritBank.findAccount(sourceID);
-			return new TransferTransaction(sourceAcc, targetAcc, amount, date);
-		}
-	}
 
-	
 	// sort account from small to large
 	public static AccountHolder[] sortAccountHolders() {
 		AccountHolder[] accountHolder = MeritBank.accountHolders;
