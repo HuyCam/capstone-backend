@@ -133,12 +133,7 @@ public class AccountHolderService {
 		account.addCDAccount(CDAccount);	// validation 
 	
 		Optional<CDOffering> offer = cdofferingRepo.findById(CDAccount.getOffering().getId());
-		
-		if (offer.isPresent()) {
-			CDAccount.setOffering(offer.get());
-		} else {
-			CDAccount.setOffering(null);
-		}
+		CDAccount.setOffering(offer.get());
 		
 		CDAccount.setAccHolder(account);
 		CDAccount = cdaccRepo.save(CDAccount);
