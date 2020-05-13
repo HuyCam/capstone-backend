@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.meritamerica.main.exceptions.NotFoundException;
 import com.meritamerica.main.models.AccountHolder;
 import com.meritamerica.main.models.CDAccount;
+import com.meritamerica.main.models.CDOffering;
 import com.meritamerica.main.models.CheckingAccount;
 import com.meritamerica.main.models.ExceedsCombinedBalanceLimitException;
 import com.meritamerica.main.models.ExceedsFraudSuspicionLimitException;
@@ -130,6 +131,15 @@ public class AccountHolderService {
 	{			
 		AccountHolder account = this.getAccountHolder(id);		
 		account.addCDAccount(CDAccount);	// validation 
+	
+		Optional<CDOffering> offer = cdofferingRepo.findById(CDAccount.getOffering().getId());
+		
+		if (offer.isPresent()) {
+			CDAccount.setOffering(offer.get());
+		} else {
+			CDAccount.setOffering(null);
+		}
+		
 		CDAccount.setAccHolder(account);
 		CDAccount = cdaccRepo.save(CDAccount);
 
