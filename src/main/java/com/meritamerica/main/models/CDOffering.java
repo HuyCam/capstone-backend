@@ -9,12 +9,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 // This CDoffering class gets the term and interest rate by two getter methods
 @Entity
+@JsonIgnoreProperties(value = { "cdAccount"  })
 public class CDOffering {
 	@NotNull
 	@Positive
@@ -30,7 +35,7 @@ public class CDOffering {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "offering")
 	private List<CDAccount> cdAccount;
-	
+		
 	public CDOffering() {
 		
 	}
@@ -82,5 +87,4 @@ public class CDOffering {
 	public void setCdAccount(List<CDAccount> cdAccount) {
 		this.cdAccount = cdAccount;
 	}
-	
 }

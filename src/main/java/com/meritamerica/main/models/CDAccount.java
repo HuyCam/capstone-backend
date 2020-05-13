@@ -12,15 +12,14 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-@JsonIgnoreProperties(value = { "accHolder", "offering", "transactions"  })
+@JsonIgnoreProperties(value = { "accHolder", "transactions"  })
 public class CDAccount extends BankAccount {
-	@NotNull
-	@Positive
-	private int terms;
-	
+	private static final double INTEREST = 0.025;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="offer_id")
 	private CDOffering offering;
@@ -28,6 +27,11 @@ public class CDAccount extends BankAccount {
 	@ManyToOne
 	@JoinColumn(name="id")
 	private AccountHolder accHolder;
+	
+	public CDAccount() throws FieldErrorException {
+		super();
+		super.setInterestRate(INTEREST);
+	}
 	
 	CDAccount(CDOffering offering, double openingBalance) {
 		super(openingBalance, offering.getInterestRate());
@@ -42,11 +46,6 @@ public class CDAccount extends BankAccount {
 		super( openingBalance, interestRate, openDate);
 		this.offering = new CDOffering(term, interestRate);
 	}	
-	
-	public CDAccount() {
-		super();
-		this.offering = new CDOffering();
-	}
 		
 	public double futureValue() {
 		double futureVal = this.getBalance() * Math.pow(1 + this.getInterestRate(), offering.getTerm());
@@ -58,14 +57,7 @@ public class CDAccount extends BankAccount {
 	}
 	
 	public void setTerm(int years) {
-		this.terms = years;
 		offering.setTerm(years);
-	}
-	
-	@Override
-	public void setInterestRate(double interestRate) throws FieldErrorException {
-		super.setInterestRate(interestRate);
-		offering.setInterestRate(interestRate);
 	}
 	
 	public double getInterestRate() {
@@ -88,7 +80,10 @@ public class CDAccount extends BankAccount {
 	}
 
 	public void setOffering(CDOffering offering) {
-		this.offering = offering;
+		if (offering == null)
+			return;
+		else 
+			this.offering = offering;
 	}
 
 	public AccountHolder getAccHolder() {

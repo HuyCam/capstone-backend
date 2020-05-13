@@ -12,6 +12,7 @@ import com.meritamerica.main.repositories.CDAccountRepo;
 import com.meritamerica.main.repositories.CDOfferRepo;
 import com.meritamerica.main.repositories.CheckingAccountRepo;
 import com.meritamerica.main.repositories.SavingAccountRepo;
+import com.meritamerica.main.services.AccountHolderService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,47 +31,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value="/AccountHolders")
 @RestController
 public class AccountHolderController {
-	
 	Logger logger = LoggerFactory.getLogger(AccountHolderController.class);
-	
+
 	@Autowired
-	AccountHolderRepo accHolderRepo;
-	
-	@Autowired
-	CheckingAccountRepo checkingRepo;
-	
-	@Autowired
-	SavingAccountRepo savingRepo;
-	
-	@Autowired
-	CDAccountRepo cdaccRepo;
-	
-	@Autowired
-	CDOfferRepo cdofferingRepo;
+	AccountHolderService accHolderService;
 	
 	@PostMapping(value = "/") 
 	@ResponseStatus(HttpStatus.CREATED)
-	@ResponseBody
-	public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder newAccountHolder) {
-		newAccountHolder = accHolderRepo.save(newAccountHolder);
-		return newAccountHolder;
+	public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder newAccountHolder) {	
+		return  this.accHolderService.createAccountHolder(newAccountHolder);
 	}
 	
 	@GetMapping(value="/")
 	public List<AccountHolder> getAccountHolders() {
-		return accHolderRepo.findAll();
+		return this.accHolderService.getAccountHolders();
 	}
 	
 	@GetMapping(value="/{id}") 
 	public AccountHolder getAccountHolder(@PathVariable("id") long id) throws NotFoundException
 	{
-		try {
-			Optional<AccountHolder> account = accHolderRepo.findById(id);
-			
-			return account.get();
-		} catch(Exception e) {
-			throw new NotFoundException("No account exists");
-		}
+		return this.accHolderService.getAccountHolder(id);
 	}
 	
 	
@@ -79,29 +59,12 @@ public class AccountHolderController {
 	public CheckingAccount addChecking(@PathVariable("id") long id, @RequestBody @Valid CheckingAccount checking ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
 	NegativeAmountException
 	{				
-		AccountHolder account = this.getAccountHolder(id);
-	/*
-	 * Why account can not save checking but checking has to save account
-	 */
-//		account.addCheckingAccount(checking);
-//		
-//		accHolderRepo.save(account);
-		
-		checking.setAccHolder(account);
-		checking = checkingRepo.save(checking);
-		
-		return checking;
+		return this.accHolderService.addChecking(id, checking);
 	}
 	
 	@GetMapping(value="/{id}/CheckingAccounts")
 	public List<CheckingAccount> getChecking(@PathVariable("id") long id) throws NotFoundException {
-		Optional<AccountHolder> account = accHolderRepo.findById(id);
-		
-		if (account.isPresent()) {
-			return account.get().getCheckingAccounts();
-		} else {
-			throw new NotFoundException("Checking Account is Not Found ");
-		}
+		return this.accHolderService.getChecking(id);
 	}
 	
 	@PostMapping(value="/{id}/SavingsAccounts")
@@ -109,21 +72,12 @@ public class AccountHolderController {
 	public SavingsAccount addSaving(@PathVariable("id") long id, @RequestBody @Valid SavingsAccount savings ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
 	NegativeAmountException
 	{	
-		AccountHolder account = this.getAccountHolder(id);
-		savings.setAccHolder(account);
-		savings = savingRepo.save(savings);
-		return savings;
+		return this.accHolderService.addSaving(id, savings);
 	}
 	
 	@GetMapping(value="/{id}/SavingsAccounts")
 	public List<SavingsAccount> getSavings(@PathVariable("id") long id) throws NotFoundException {
-		Optional<AccountHolder> account = accHolderRepo.findById(id);
-		
-		if (account.isPresent()) {
-			return account.get().getSavingsAccounts();
-		} else {
-			throw new NotFoundException("Saving Account is Not Found ");
-		}
+		return this.accHolderService.getSavings(id);
 	}
 
 	@PostMapping(value="/{id}/CDAccounts")
@@ -131,21 +85,11 @@ public class AccountHolderController {
 	public CDAccount addCDAccount(@PathVariable("id") long id, @RequestBody @Valid CDAccount CDAccount ) throws NotFoundException, ExceedsCombinedBalanceLimitException,
 	NegativeAmountException, ExceedsFraudSuspicionLimitException, FieldErrorException
 	{			
-		AccountHolder account = this.getAccountHolder(id);				
-		CDAccount.setAccHolder(account);
-		CDAccount = cdaccRepo.save(CDAccount);
-
-		return CDAccount;
+		return this.accHolderService.addCDAccount(id, CDAccount);
 	}
 	
 	@GetMapping(value="/{id}/CDAccounts")
 	public List<CDAccount> getCDAccounts(@PathVariable("id") long id) throws NotFoundException {
-		Optional<AccountHolder> account = accHolderRepo.findById(id);
-		
-		if (account.isPresent()) {
-			return account.get().getCDAccounts();
-		} else {
-			throw new NotFoundException("CD Account is Not Found ");
-		}
+		return this.accHolderService.getCDAccounts(id);
 	}
 }

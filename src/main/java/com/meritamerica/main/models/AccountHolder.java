@@ -1,7 +1,6 @@
 package com.meritamerica.main.models;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -12,18 +11,18 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+//<<<<<<< HEAD
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+//=======
+//>>>>>>> service-layer
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -56,8 +55,8 @@ public class AccountHolder implements Comparable{
 	    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accHolder")
 	    private List<CDAccount> CDAccounts;
 	    
-	    @JsonManagedReference
 	    @OneToOne(mappedBy = "accountHolder",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	    @JsonManagedReference
 	    private AccountHolderContact accountHolderContact;
 	    
 
@@ -283,4 +282,6 @@ public class AccountHolder implements Comparable{
 		public void setCDAccounts(List<CDAccount> cDAccounts) {
 			CDAccounts = cDAccounts;
 		}
+		
+		
 }

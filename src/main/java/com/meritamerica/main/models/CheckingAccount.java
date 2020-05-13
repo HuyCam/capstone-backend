@@ -2,6 +2,7 @@ package com.meritamerica.main.models;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -18,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class CheckingAccount extends BankAccount {
 	private static double INTEREST_RATE = 0.0001;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="id")
 	private AccountHolder accHolder;
 	

@@ -1,4 +1,4 @@
-package com.meritamerica.main.controllers;
+package com.meritamerica.main.services;
 
 import java.util.List;
 
@@ -6,33 +6,31 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.meritamerica.main.exceptions.NotFoundException;
 import com.meritamerica.main.models.CDOffering;
 import com.meritamerica.main.models.FieldErrorException;
+import com.meritamerica.main.models.MeritBank;
 import com.meritamerica.main.repositories.CDOfferRepo;
-import com.meritamerica.main.services.CDOfferingService;
 
-@RestController
-@RequestMapping(value="/CDOfferings")
-public class CDOfferingController {
+@Service
+public class CDOfferingService {
 	@Autowired
-	CDOfferingService CDOService;
+	CDOfferRepo cdofferingRepo;
 	
-	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public CDOffering createCDOffering(@RequestBody @Valid CDOffering offering) throws FieldErrorException {				
-		return this.CDOService.createCDOffering(offering);
+	public CDOffering createCDOffering(CDOffering offering) throws FieldErrorException {		
+		MeritBank.addCDOffering(offering); // this is for validation
+		offering = cdofferingRepo.save(offering);
+		return offering;
 	}
 	
-	@GetMapping
 	public List<CDOffering> getCDOfferings() throws NotFoundException {
-	    return this.CDOService.getCDOfferings();
+	    return cdofferingRepo.findAll();
 	}
+	
 }
