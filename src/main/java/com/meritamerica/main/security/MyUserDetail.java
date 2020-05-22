@@ -12,16 +12,18 @@ public class MyUserDetail implements UserDetails {
 	private String username;
 	private String password;
 	private List<String> roles;
+	private List<GrantedAuthority> authorities;
 	
 	public MyUserDetail(Users user) {
 		this.username = user.getUsername();
 		this.password = user.getPassword();
 		
 		this.roles = user.getRoleList();
+		this.authorities = user.getAuthorityList();
 	}
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		return authorities;
 	}
 
 	@Override

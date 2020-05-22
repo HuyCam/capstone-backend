@@ -44,7 +44,7 @@ public class MyController {
 	@GetMapping("/userinfo")
 	public String userInfo(Principal principal ) {
 		
-		return "User" + principal.getName();
+		return "User " + principal.getName();
 	}
 	
 	@PostMapping("/users")

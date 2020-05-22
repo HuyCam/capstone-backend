@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -31,7 +32,11 @@ public class Users {
 	
 	private String roles = "ROLE_USER";
 	
-	private String authorities = "READ_PRIVILEGE";
+	/**
+	 * 2 authorities: ADMIN_PRIVILEGE, USER_PRIVILEGE
+	 */
+	@NotEmpty
+	private String authorities ;
 	
 	public Users(String username, String password) {
 		this.username = username;
@@ -112,4 +117,19 @@ public class Users {
 //		
 //		return new ArrayList<>();
 //	}
+	
+	public List<GrantedAuthority> getAuthorityList() {
+		if (this.authorities.length() > 0) {
+			String[] arrStr = this.authorities.split(",");
+			List<GrantedAuthority> authorityList = new ArrayList<>();
+			for (String auth : arrStr) {
+				authorityList.add(new Authority(auth));
+			}
+			
+			return authorityList;
+		}
+		
+		return new ArrayList<GrantedAuthority>();
+
+	}
 }
