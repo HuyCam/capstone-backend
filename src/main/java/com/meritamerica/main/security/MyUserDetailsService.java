@@ -23,7 +23,6 @@ public class MyUserDetailsService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Users aUser = userRepo.findByUserName(username);
-//		Optional<Users> aUser = userRepo.findById((long) 1) ;
         MyUserDetail userDetail = new MyUserDetail(aUser);
         System.out.println("loadUserByUsername in detail service " + userDetail.getUsername() + " password " + userDetail.getPassword());
          
@@ -31,11 +30,11 @@ public class MyUserDetailsService implements UserDetailsService{
 	}
 	
 	// Converts user to spring.springframework.security.core.userdetails.User
-    private User buildUserForAuthentication(Users user,
-        List<GrantedAuthority> authorities) {
-        return new User(user.getUsername(), user.getPassword(),
-            user.isEnabled(), true, true, true, user.getAuthorityList());
-    }
+//    private User buildUserForAuthentication(Users user,
+//        List<GrantedAuthority> authorities) {
+//        return new User(user.getUsername(), user.getPassword(),
+//            user.isEnabled(), true, true, true, user.getAuthorityList());
+//    }
 
 //    private List<GrantedAuthority> buildUserAuthority(Set<UserRole> userRoles) {
 //

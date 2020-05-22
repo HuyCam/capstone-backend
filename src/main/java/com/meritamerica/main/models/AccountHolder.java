@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 //=======
 //>>>>>>> service-layer
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.meritamerica.main.security.Users;
 
 @Entity
 @Table(name="accountholder")
@@ -58,6 +59,10 @@ public class AccountHolder implements Comparable{
 	    @OneToOne(mappedBy = "accountHolder",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	    @JsonManagedReference
 	    private AccountHolderContact accountHolderContact;
+	    
+	    @OneToOne(mappedBy = "accountHolder",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	    @JsonManagedReference
+	    private Users user;
 	    
 
 	    public AccountHolder (){	

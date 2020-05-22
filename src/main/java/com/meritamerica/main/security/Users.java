@@ -11,10 +11,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.meritamerica.main.models.AccountHolder;
 
 @Entity
 public class Users {
@@ -32,16 +37,22 @@ public class Users {
 	
 	private String roles = "ROLE_USER";
 	
+	@OneToOne
+	@JoinColumn(name="id")
+	@JsonBackReference
+	private AccountHolder accountHolder;
+	
 	/**
 	 * 2 authorities: ADMIN_PRIVILEGE, USER_PRIVILEGE
 	 */
 	@NotEmpty
 	private String authorities ;
 	
-	public Users(String username, String password) {
+	public Users(String username, String password, String authorities) {
 		this.username = username;
 		this.password = password; 
 		this.enabled = true;
+		this.authorities = authorities;
 	}
 	
 	

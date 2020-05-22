@@ -40,8 +40,10 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable()
 				.authorizeRequests().antMatchers("/authenticate").permitAll().
-//						antMatchers("/users").permitAll().
+						antMatchers("/authenticate/createUser/**").hasAnyAuthority("ADMIN_PRIVILEGE").
 						antMatchers("/userinfo").hasAnyAuthority("ADMIN_PRIVILEGE").
+						antMatchers("/AccountHolders/**").hasAnyAuthority("ADMIN_PRIVILEGE").
+						antMatchers("/Me/**").hasAnyAuthority("ADMIN_PRIVILEGE", "USER_PRIVILEGE").
 						anyRequest().authenticated().and().
 						exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -49,9 +51,10 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 	
+	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-	    web.ignoring().antMatchers("/h2-console/**").antMatchers("/users");
+	    web.ignoring().antMatchers("/h2-console/**");
 	}
 	
 	// for newer spring security, we need this to make it backward compatible.
