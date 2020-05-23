@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -60,8 +61,9 @@ public class AccountHolder implements Comparable{
 	    @JsonManagedReference
 	    private AccountHolderContact accountHolderContact;
 	    
-	    @OneToOne(mappedBy = "accountHolder",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	    @JsonManagedReference
+	    @OneToOne(cascade = CascadeType.ALL)
+		@JoinColumn(name="username")
+		@JsonBackReference
 	    private Users user;
 	    
 
@@ -272,7 +274,15 @@ public class AccountHolder implements Comparable{
 	    	return this.savingsAccounts;
 	    }
 	    
-	    public void setSavingsAccounts(List<SavingsAccount> savingsAccounts) {
+	    public Users getUser() {
+			return user;
+		}
+
+		public void setUser(Users user) {
+			this.user = user;
+		}
+
+		public void setSavingsAccounts(List<SavingsAccount> savingsAccounts) {
 			this.savingsAccounts = savingsAccounts;
 		}
 	    

@@ -6,8 +6,10 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Generated;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.meritamerica.main.models.AccountHolder;
 
 @Entity
@@ -37,9 +40,9 @@ public class Users {
 	
 	private String roles = "ROLE_USER";
 	
-	@OneToOne
-	@JoinColumn(name="id")
-	@JsonBackReference
+	@OneToOne(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonManagedReference
+
 	private AccountHolder accountHolder;
 	
 	/**
@@ -59,6 +62,16 @@ public class Users {
 	public Users() {
 		this.enabled = true;
 	}
+
+	public AccountHolder getAccountHolder() {
+		return accountHolder;
+	}
+
+
+	public void setAccountHolder(AccountHolder accountHolder) {
+		this.accountHolder = accountHolder;
+	}
+
 
 	public long getId() {
 		return id;

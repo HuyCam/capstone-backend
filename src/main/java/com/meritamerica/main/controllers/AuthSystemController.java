@@ -46,7 +46,7 @@ public class AuthSystemController {
 	@GetMapping("/userinfo")
 	public String userInfo(Principal principal ) {
 		
-		return "User " + principal.getName();
+		return "user " + principal.getName();
 	}
 	
 	@PostMapping("/authenticate/createUser")

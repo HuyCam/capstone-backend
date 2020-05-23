@@ -40,17 +40,18 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable()
 				.authorizeRequests().antMatchers("/authenticate").permitAll().
+//						antMatchers("/register")
 						antMatchers("/authenticate/createUser/**").hasAnyAuthority("ADMIN_PRIVILEGE").
 						antMatchers("/userinfo").hasAnyAuthority("ADMIN_PRIVILEGE").
+//						antMatchers("/userinfo").hasAnyAuthority("ADMIN_PRIVILEGE").
 						antMatchers("/AccountHolders/**").hasAnyAuthority("ADMIN_PRIVILEGE").
-						antMatchers("/Me/**").hasAnyAuthority("ADMIN_PRIVILEGE", "USER_PRIVILEGE").
+						antMatchers("/Me/**").hasAnyAuthority("USER_PRIVILEGE").
 						anyRequest().authenticated().and().
 						exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-	
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
@@ -63,6 +64,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return NoOpPasswordEncoder.getInstance();

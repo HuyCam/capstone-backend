@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.meritamerica.main.exceptions.AccountHolderAlreadyExist;
 import com.meritamerica.main.exceptions.NotFoundException;
 import com.meritamerica.main.models.AccountHolder;
 import com.meritamerica.main.models.CDAccount;
@@ -28,7 +29,9 @@ import com.meritamerica.main.repositories.AccountHolderRepo;
 import com.meritamerica.main.repositories.CDAccountRepo;
 import com.meritamerica.main.repositories.CDOfferRepo;
 import com.meritamerica.main.repositories.CheckingAccountRepo;
+import com.meritamerica.main.repositories.MyUserRepo;
 import com.meritamerica.main.repositories.SavingAccountRepo;
+import com.meritamerica.main.security.Users;
 
 /**
  * A service class act as an abstract layer between controller and DAO
@@ -53,16 +56,30 @@ public class AccountHolderService {
 	
 	@Autowired
 	CDOfferRepo cdofferingRepo;
+	
+	@Autowired
+	MyUserRepo userRepo;
 	/** 
 	 * Pipe a new Account Holder through Merit Bank to have inner validation
 	 * then save it to database
 	 * 
 	 * @param an new account holder
 	 * @return a account holder has been processed by database.
+	 * @throws Exception 
 	 */
-	public AccountHolder createAccountHolder(AccountHolder newAccountHolder) {
+	public AccountHolder createAccountHolder(AccountHolder newAccountHolder) throws AccountHolderAlreadyExist  {
+		String username = newAccountHolder.getUser().getUsername();
+		// check if this user name already have an account 
+		if (userRepo.findByUserName(username).getAccountHolder() != null) {
+			throw new AccountHolderAlreadyExist("This user already have an account holder");
+		}
+		newAccountHolder.setUser(userRepo.findByUserName(username));
 		newAccountHolder =  accHolderRepo.save(newAccountHolder);
 		return newAccountHolder;
+	}
+	
+	public List<Users> getUsers() {
+		return userRepo.findAll();
 	}
 	
 	public List<AccountHolder> getAccountHolders() {

@@ -12,6 +12,7 @@ import com.meritamerica.main.repositories.CDAccountRepo;
 import com.meritamerica.main.repositories.CDOfferRepo;
 import com.meritamerica.main.repositories.CheckingAccountRepo;
 import com.meritamerica.main.repositories.SavingAccountRepo;
+import com.meritamerica.main.security.Users;
 import com.meritamerica.main.services.AccountHolderService;
 
 import org.slf4j.Logger;
@@ -35,8 +36,19 @@ public class AccountHolderController {
 
 	@Autowired
 	AccountHolderService accHolderService;
+
+	// debugging
+	@GetMapping(value="/users")
+	public List<Users> getUsers() {
+		return this.accHolderService.getUsers();
+	}
+//	@GetMapping(value="/users")
+//	public String getUsers() {
+//		return "String";
+//	}
+	// done debugg
 	
-	@PostMapping(value = "/") 
+	@PostMapping(value = "/")
 	@ResponseStatus(HttpStatus.CREATED)
 	public AccountHolder createAccountHolder(@RequestBody @Valid AccountHolder newAccountHolder) {	
 		return  this.accHolderService.createAccountHolder(newAccountHolder);
@@ -52,7 +64,6 @@ public class AccountHolderController {
 	{
 		return this.accHolderService.getAccountHolder(id);
 	}
-	
 	
 	@PostMapping(value="/{id}/CheckingAccounts")
 	@ResponseStatus(HttpStatus.CREATED)
