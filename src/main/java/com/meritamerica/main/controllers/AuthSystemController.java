@@ -43,11 +43,11 @@ public class AuthSystemController {
 		return "Hello World";
 	}
 	
-	@GetMapping("/userinfo")
-	public String userInfo(Principal principal ) {
-		
-		return "user " + principal.getName();
-	}
+//	@GetMapping("/userinfo")
+//	public String userInfo(Principal principal ) {
+//		
+//		return "user " + principal.getName();
+//	}
 	
 	@PostMapping("/authenticate/createUser")
 	public Users createUser(@RequestBody @Valid Users user) {

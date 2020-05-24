@@ -36,17 +36,6 @@ public class AccountHolderController {
 
 	@Autowired
 	AccountHolderService accHolderService;
-
-	// debugging
-	@GetMapping(value="/users")
-	public List<Users> getUsers() {
-		return this.accHolderService.getUsers();
-	}
-//	@GetMapping(value="/users")
-//	public String getUsers() {
-//		return "String";
-//	}
-	// done debugg
 	
 	@PostMapping(value = "/")
 	@ResponseStatus(HttpStatus.CREATED)

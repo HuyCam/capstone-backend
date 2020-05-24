@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
+import com.meritamerica.main.models.AccountHolder;
 import com.meritamerica.main.repositories.MyUserRepo;
 import com.meritamerica.main.security.Users;
 
@@ -22,8 +23,15 @@ public class DBinit implements CommandLineRunner {
 		Users david = new Users("david", "123", "USER_PRIVILEGE");
 		Users admin = new Users("admin", "123", "ADMIN_PRIVILEGE");
 		
+		// add AccountHolder to user
+//		AccountHolder huyAccountHolder = new AccountHolder("Huy","", "Cam", "123456789");
+//		huyAccountHolder.setUser(huy);
+//		huy.setAccountHolder(huyAccountHolder);
+		
+		
 		List<Users> users = Arrays.asList(huy, admin, david);
 		
+
 		// Save to db
 		this.userRepo.saveAll(users);
 	}

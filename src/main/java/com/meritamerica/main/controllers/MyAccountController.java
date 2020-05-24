@@ -13,48 +13,58 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.meritamerica.main.models.AccountHolder;
+import com.meritamerica.main.models.CDAccount;
 import com.meritamerica.main.models.CheckingAccount;
 import com.meritamerica.main.models.ExceedsCombinedBalanceLimitException;
+import com.meritamerica.main.models.SavingsAccount;
 import com.meritamerica.main.repositories.CDAccountRepo;
 import com.meritamerica.main.repositories.CDOfferRepo;
 import com.meritamerica.main.repositories.CheckingAccountRepo;
 import com.meritamerica.main.repositories.MyUserRepo;
 import com.meritamerica.main.repositories.SavingAccountRepo;
 import com.meritamerica.main.security.Users;
+import com.meritamerica.main.services.MyAccountService;
 
 @RequestMapping(value="/Me")
 @RestController
 public class MyAccountController {
 	@Autowired
-	MyUserRepo userRepo;
-	
-	@Autowired
-	private CheckingAccountRepo checkingRepo;
-	
-	@Autowired
-	SavingAccountRepo savingRepo;
-	
-	@Autowired
-	CDAccountRepo cdaccRepo;
-	
-	@Autowired
-	CDOfferRepo cdofferingRepo;
+	MyAccountService accService;
 	
 	@GetMapping
 	public AccountHolder getMyAccountHolder(Principal principal) {
-		Users user = userRepo.findByUserName(principal.getName());
-		AccountHolder acc = user.getAccountHolder();
-		return acc;
+		return accService.getMyAccountHolder(principal);
 	}
 	
 	@PostMapping("/CheckingAccounts")
 	public CheckingAccount addChecking(@RequestBody @Valid CheckingAccount checking,Principal principal) throws ExceedsCombinedBalanceLimitException {
-		Users user = userRepo.findByUserName(principal.getName());
-		AccountHolder acc = user.getAccountHolder();
-		acc.addCheckingAccount(checking);
-		checking = checkingRepo.save(checking);
-		return checking;
+		return accService.addChecking(checking, principal);
 	}
 	
+	@GetMapping("/CheckingAccounts")
+	public List<CheckingAccount> getCheckings(Principal principal) {
+		return accService.getCheckings(principal);
+	}
+	
+	@PostMapping("/SavingsAccounts")
+	public SavingsAccount addSaving(@RequestBody @Valid SavingsAccount saving,Principal principal) throws ExceedsCombinedBalanceLimitException {
+		return accService.addSaving(saving, principal);
+	}
+	
+	@GetMapping("/SavingsAccounts")
+	public List<SavingsAccount> getSavings(Principal principal) {
+		return accService.getSavings(principal);
+	}
+	
+	@PostMapping("/CDAccounts")
+	public CDAccount addCDAccount(@RequestBody @Valid CDAccount cda,Principal principal) throws ExceedsCombinedBalanceLimitException {
+		return accService.addCDAccount(cda, principal);
+	}
+	
+	
+	@GetMapping("/CDAccounts")
+	public List<CDAccount> getCDAccount(Principal principal) throws ExceedsCombinedBalanceLimitException {
+		return accService.getCDAccount(principal);
+	}
 	
 }

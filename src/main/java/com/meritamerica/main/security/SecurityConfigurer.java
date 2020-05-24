@@ -36,14 +36,13 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 		.usersByUsernameQuery("select username, password, enabled from users where username = ?")
 		.authoritiesByUsernameQuery("select username,authorities from users where username = ?");
 	}
+	 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable()
 				.authorizeRequests().antMatchers("/authenticate").permitAll().
-//						antMatchers("/register")
 						antMatchers("/authenticate/createUser/**").hasAnyAuthority("ADMIN_PRIVILEGE").
-						antMatchers("/userinfo").hasAnyAuthority("ADMIN_PRIVILEGE").
-//						antMatchers("/userinfo").hasAnyAuthority("ADMIN_PRIVILEGE").
+						antMatchers("/CDOfferings").hasAnyAuthority("ADMIN_PRIVILEGE").
 						antMatchers("/AccountHolders/**").hasAnyAuthority("ADMIN_PRIVILEGE").
 						antMatchers("/Me/**").hasAnyAuthority("USER_PRIVILEGE").
 						anyRequest().authenticated().and().

@@ -32,7 +32,7 @@ import com.meritamerica.main.security.Users;
 //@JsonIgnoreProperties(value = { "accountHolderContact" })
 public class AccountHolder implements Comparable{ 	
 		@Id
-		@GeneratedValue(strategy = GenerationType.AUTO)
+//		@GeneratedValue(strategy = GenerationType.AUTO)
 		@Column(name="id")
 		private long id;
 	    // Class member variables 
@@ -258,7 +258,7 @@ public class AccountHolder implements Comparable{
 			return id;
 		}
 
-		public void setId(int id) {
+		public void setId(long id) {
 			this.id = id;
 		}
 
