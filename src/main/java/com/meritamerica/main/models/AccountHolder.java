@@ -47,6 +47,8 @@ public class AccountHolder implements Comparable{
 	    @Size(min=9, message="SNN can not be less than 9 characters")
 	    private String ssn;
 	    
+	    @NotNull(message="email can not be Null")
+	    private String email;
 	    
 	    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accHolder")
 	    private List<CheckingAccount> checkingAccounts;
@@ -56,10 +58,6 @@ public class AccountHolder implements Comparable{
 	    
 	    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accHolder")
 	    private List<CDAccount> CDAccounts;
-	    
-	    @OneToOne(mappedBy = "accountHolder",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	    @JsonManagedReference
-	    private AccountHolderContact accountHolderContact;
 	    
 	    @OneToOne(cascade = CascadeType.ALL)
 		@JoinColumn(name="username")
@@ -261,14 +259,6 @@ public class AccountHolder implements Comparable{
 		public void setId(long id) {
 			this.id = id;
 		}
-
-		public AccountHolderContact getAccountHolderContact() {
-			return accountHolderContact;
-		}
-
-		public void setAccountHolderContact(AccountHolderContact accountHolderContact) {
-			this.accountHolderContact = accountHolderContact;
-		}
 		
 	    public List<SavingsAccount> getSavingsAccounts() {
 	    	return this.savingsAccounts;
@@ -296,6 +286,14 @@ public class AccountHolder implements Comparable{
 
 		public void setCDAccounts(List<CDAccount> cDAccounts) {
 			CDAccounts = cDAccounts;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
 		}
 		
 		

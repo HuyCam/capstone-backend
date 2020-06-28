@@ -6,10 +6,13 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.meritamerica.main.models.AccountHolder;
@@ -25,6 +28,8 @@ import com.meritamerica.main.repositories.SavingAccountRepo;
 import com.meritamerica.main.security.Users;
 import com.meritamerica.main.services.MyAccountService;
 
+
+@CrossOrigin(origins ="*", allowedHeaders ="*")
 @RequestMapping(value="/Me")
 @RestController
 public class MyAccountController {
@@ -34,6 +39,13 @@ public class MyAccountController {
 	@GetMapping
 	public AccountHolder getMyAccountHolder(Principal principal) {
 		return accService.getMyAccountHolder(principal);
+	}
+	
+	@CrossOrigin(origins ="*")
+	@PostMapping(value = "/AccountHolder")
+	@ResponseStatus(HttpStatus.CREATED)
+	public AccountHolder createMyAccountHolder(@RequestBody @Valid AccountHolder newAccountHolder, Principal principal) {	
+		return  this.accService.createMyAccountHolder(newAccountHolder, principal);
 	}
 	
 	@PostMapping("/CheckingAccounts")

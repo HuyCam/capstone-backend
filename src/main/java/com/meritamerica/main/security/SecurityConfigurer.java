@@ -1,5 +1,7 @@
 package com.meritamerica.main.security;
 
+import java.util.Arrays;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.meritamerica.main.security.JwtRequestFilter;
 
@@ -40,13 +48,15 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable()
-				.authorizeRequests().antMatchers("/authenticate").permitAll().
-						antMatchers("/authenticate/createUser/**").hasAnyAuthority("ADMIN_PRIVILEGE").
-						antMatchers("/CDOfferings").hasAnyAuthority("ADMIN_PRIVILEGE").
-						antMatchers("/AccountHolders/**").hasAnyAuthority("ADMIN_PRIVILEGE").
+				.authorizeRequests().antMatchers("/authenticate/**").permitAll().
+//						antMatchers("/authenticate/createUser/**").hasAnyAuthority("ADMIN_PRIVILEGE").
+//						antMatchers("/CDOfferings").hasAnyAuthority("ADMIN_PRIVILEGE").
+//						antMatchers("/AccountHolders/**").hasAnyAuthority("ADMIN_PRIVILEGE").
 						antMatchers("/Me/**").hasAnyAuthority("USER_PRIVILEGE").
 						anyRequest().authenticated().and().
-						exceptionHandling().and().sessionManagement()
+						exceptionHandling()
+						.and().cors()
+						.and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
@@ -63,6 +73,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
+	
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {

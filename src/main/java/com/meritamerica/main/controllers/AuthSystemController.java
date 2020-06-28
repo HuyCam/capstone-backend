@@ -5,25 +5,30 @@ import java.security.Principal;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.meritamerica.main.models.AccountHolder;
 import com.meritamerica.main.repositories.MyUserRepo;
 import com.meritamerica.main.security.AuthenticationRequest;
 import com.meritamerica.main.security.AuthenticationResponse;
 import com.meritamerica.main.security.JwtUtil;
 import com.meritamerica.main.security.MyUserDetailsService;
 import com.meritamerica.main.security.Users;
-
+// cors, cross orgina
+@CrossOrigin(origins ="*")
 @RestController
 public class AuthSystemController {
 	@Autowired
@@ -43,13 +48,8 @@ public class AuthSystemController {
 		return "Hello World";
 	}
 	
-//	@GetMapping("/userinfo")
-//	public String userInfo(Principal principal ) {
-//		
-//		return "user " + principal.getName();
-//	}
-	
 	@PostMapping("/authenticate/createUser")
+	@ResponseStatus(HttpStatus.CREATED)
 	public Users createUser(@RequestBody @Valid Users user) {
 		user =  myUserRepo.save(user);
 		
@@ -78,7 +78,10 @@ public class AuthSystemController {
 				.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String jwt = jwtTokenUtil.generateToken(userDetails);
+		
+		Users user = myUserRepo.findByUserName(authenticationRequest.getUsername());
+		AccountHolder acc = user.getAccountHolder();
 
-		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+		return ResponseEntity.ok(new AuthenticationResponse(jwt, acc));
 	}
 }

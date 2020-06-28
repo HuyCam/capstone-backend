@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.meritamerica.main.exceptions.AccountHolderAlreadyExist;
 import com.meritamerica.main.models.AccountHolder;
 import com.meritamerica.main.models.CDAccount;
 import com.meritamerica.main.models.CheckingAccount;
 import com.meritamerica.main.models.ExceedsCombinedBalanceLimitException;
 import com.meritamerica.main.models.SavingsAccount;
+import com.meritamerica.main.repositories.AccountHolderRepo;
 import com.meritamerica.main.repositories.CDAccountRepo;
 import com.meritamerica.main.repositories.CDOfferRepo;
 import com.meritamerica.main.repositories.CheckingAccountRepo;
@@ -40,8 +42,21 @@ public class MyAccountService {
 	@Autowired
 	CDOfferRepo cdofferingRepo;
 	
+	@Autowired
+	AccountHolderRepo accHolderRepo; 
+	
 	public Users getUser(String username) {
 		return userRepo.findByUserName(username);
+	}
+	
+	public AccountHolder createMyAccountHolder(AccountHolder newAccountHolder, Principal principal) {
+		Users user = userRepo.findByUserName(principal.getName());
+		newAccountHolder.setUser(user);
+		
+		newAccountHolder.setId(user.getId());
+		
+		newAccountHolder =  accHolderRepo.save(newAccountHolder);
+		return newAccountHolder;
 	}
 	
 	public AccountHolder getMyAccountHolder(Principal principal) {

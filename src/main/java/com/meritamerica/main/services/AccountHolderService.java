@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.meritamerica.main.exceptions.AccountHolderAlreadyExist;
 import com.meritamerica.main.exceptions.NotFoundException;
 import com.meritamerica.main.models.AccountHolder;
-import com.meritamerica.main.models.AccountHolderContact;
 import com.meritamerica.main.models.CDAccount;
 import com.meritamerica.main.models.CDOffering;
 import com.meritamerica.main.models.CheckingAccount;
@@ -26,7 +25,6 @@ import com.meritamerica.main.models.ExceedsFraudSuspicionLimitException;
 import com.meritamerica.main.models.FieldErrorException;
 import com.meritamerica.main.models.NegativeAmountException;
 import com.meritamerica.main.models.SavingsAccount;
-import com.meritamerica.main.repositories.AccHolderContactRepo;
 import com.meritamerica.main.repositories.AccountHolderRepo;
 import com.meritamerica.main.repositories.CDAccountRepo;
 import com.meritamerica.main.repositories.CDOfferRepo;
@@ -62,8 +60,6 @@ public class AccountHolderService {
 	@Autowired
 	MyUserRepo userRepo;
 	
-	@Autowired
-	AccHolderContactRepo contactRepo;
 	/** 
 	 * Pipe a new Account Holder through Merit Bank to have inner validation
 	 * then save it to database
@@ -82,11 +78,11 @@ public class AccountHolderService {
 		newAccountHolder.setUser(user);
 		
 		newAccountHolder.setId(user.getId());
-		newAccountHolder.getAccountHolderContact().setId(user.getId());
 		
 		newAccountHolder =  accHolderRepo.save(newAccountHolder);
 		return newAccountHolder;
 	}
+	
 	
 	public List<Users> getUsers() {
 		return userRepo.findAll();
