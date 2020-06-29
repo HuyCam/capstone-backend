@@ -1,7 +1,9 @@
 package com.meritamerica.main.services;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.meritamerica.main.exceptions.AccountHolderAlreadyExist;
 import com.meritamerica.main.models.AccountHolder;
+import com.meritamerica.main.models.BankAccount;
 import com.meritamerica.main.models.CDAccount;
 import com.meritamerica.main.models.CheckingAccount;
 import com.meritamerica.main.models.ExceedsCombinedBalanceLimitException;
+import com.meritamerica.main.models.NegativeAmountException;
 import com.meritamerica.main.models.SavingsAccount;
 import com.meritamerica.main.repositories.AccountHolderRepo;
 import com.meritamerica.main.repositories.CDAccountRepo;
@@ -102,6 +106,85 @@ public class MyAccountService {
 		AccountHolder acc = getMyAccountHolder(principal);
 
 		return acc.getCDAccounts();
+	}
+	
+	public BankAccount depositBankAccount(Principal principal, long id, double amount) throws NegativeAmountException {
+		
+		if (amount < 0) {
+			throw new NegativeAmountException();
+		}
+		
+		AccountHolder acc = getMyAccountHolder(principal);
+		BankAccount bankAccount = this.findAccount(acc, id);
+		
+		// not allow to deposit to CDAccount
+		if (bankAccount instanceof CDAccount) {
+			return null;
+		}
+		
+		double newBalance = bankAccount.getBalance() + amount;
+		bankAccount.setBalance(newBalance);
+		
+		return this.saveBankAccount(bankAccount);
+	}
+	
+	public BankAccount withdrawBankAccount(Principal principal, long id, double amount) throws NegativeAmountException {
+		if (amount < 0) {
+			throw new NegativeAmountException();
+		}
+		
+		AccountHolder acc = getMyAccountHolder(principal);
+		BankAccount bankAccount = this.findAccount(acc, id);
+		
+		// not allow to deposit to CDAccount
+		if (bankAccount instanceof CDAccount) {
+			return null;
+		}
+		
+		double newBalance = bankAccount.getBalance() - amount;
+		bankAccount.setBalance(newBalance);
+		return this.saveBankAccount(bankAccount);
+	}
+	
+	public BankAccount saveBankAccount(BankAccount account) {
+		if (account instanceof CheckingAccount) {
+			return checkingRepo.save((CheckingAccount) account);
+		} else if (account instanceof SavingsAccount) {
+			return savingRepo.save((SavingsAccount) account);
+		} else if (account instanceof CDAccount) {
+			return cdaccRepo.save((CDAccount) account);
+		} else {
+			return null;
+		}
+	}
+	
+	/*
+	 * Find an account with id inside a provided account holder
+	 */
+	public BankAccount findAccount(AccountHolder acc, long ID) {
+		List<CheckingAccount> checkings = acc.getCheckingAccounts();
+		
+		for (int i = 0; i < checkings.size(); i++) {
+			if (checkings.get(i).getAccountNumber() == ID) {
+				return checkings.get(i);
+			}
+		}
+		
+		List<SavingsAccount> savings = acc.getSavingsAccounts();
+		for (int j = 0; j < savings.size(); j++) {
+			if (savings.get(j).getAccountNumber() == ID) {
+				return savings.get(j);
+			}
+		}
+		
+		List<CDAccount> cdaccount = acc.getCDAccounts();
+		for (int j = 0; j < cdaccount.size(); j++) {
+			if (cdaccount.get(j).getAccountNumber() == ID) {
+				return cdaccount.get(j);
+			}
+		}
+		
+		return null;
 	}
 	
 }
